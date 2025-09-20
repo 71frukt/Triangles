@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/frukt71/Github/Triangles/build",
+  "command": "/usr/bin/c++ -DDEBUG_MODE -I/home/frukt71/Github/Triangles/libs/RLogSU/include -I/home/frukt71/Github/Triangles/source/Geometry/include -std=gnu++20 -o CMakeFiles/Triangles.dir/source/main.cpp.o -c /home/frukt71/Github/Triangles/source/main.cpp",
+  "file": "/home/frukt71/Github/Triangles/source/main.cpp"
+},
+{
+  "directory": "/home/frukt71/Github/Triangles/build/libs/RLogSU",
+  "command": "/usr/bin/c++ -DDEBUG_MODE -DFMT_LOCALE -DFMT_SHARED -I/home/frukt71/Github/Triangles/libs/RLogSU/include -std=c++20 -o CMakeFiles/RLogSU.dir/src/logger.cpp.o -c /home/frukt71/Github/Triangles/libs/RLogSU/src/logger.cpp",
+  "file": "/home/frukt71/Github/Triangles/libs/RLogSU/src/logger.cpp"
+},
+{
+  "directory": "/home/frukt71/Github/Triangles/build/source/Geometry",
+  "command": "/usr/bin/c++ -DDEBUG_MODE -I/home/frukt71/Github/Triangles/source/Geometry/include -I/home/frukt71/Github/Triangles/libs/RLogSU/include -std=c++20 -o CMakeFiles/Geometry.dir/src/primitives/plane3.cpp.o -c /home/frukt71/Github/Triangles/source/Geometry/src/primitives/plane3.cpp",
+  "file": "/home/frukt71/Github/Triangles/source/Geometry/src/primitives/plane3.cpp"
+},
+{
+  "directory": "/home/frukt71/Github/Triangles/build/source/Geometry",
+  "command": "/usr/bin/c++ -DDEBUG_MODE -I/home/frukt71/Github/Triangles/source/Geometry/include -I/home/frukt71/Github/Triangles/libs/RLogSU/include -std=c++20 -o CMakeFiles/Geometry.dir/src/math/vector3.cpp.o -c /home/frukt71/Github/Triangles/source/Geometry/src/math/vector3.cpp",
+  "file": "/home/frukt71/Github/Triangles/source/Geometry/src/math/vector3.cpp"
+}
+]

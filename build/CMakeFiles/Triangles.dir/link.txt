@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/Triangles.dir/source/main.cpp.o -o Triangles  libs/RLogSU/libRLogSU.a source/Geometry/libGeometry.a libs/RLogSU/libRLogSU.a /usr/lib/x86_64-linux-gnu/libfmt.so.8.1.1 -Wl,--as-needed 

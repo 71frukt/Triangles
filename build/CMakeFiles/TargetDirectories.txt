@@ -1,0 +1,13 @@
+/home/frukt71/Github/Triangles/build/CMakeFiles/check.dir
+/home/frukt71/Github/Triangles/build/CMakeFiles/Triangles.dir
+/home/frukt71/Github/Triangles/build/CMakeFiles/test.dir
+/home/frukt71/Github/Triangles/build/CMakeFiles/edit_cache.dir
+/home/frukt71/Github/Triangles/build/CMakeFiles/rebuild_cache.dir
+/home/frukt71/Github/Triangles/build/libs/RLogSU/CMakeFiles/RLogSU.dir
+/home/frukt71/Github/Triangles/build/libs/RLogSU/CMakeFiles/test.dir
+/home/frukt71/Github/Triangles/build/libs/RLogSU/CMakeFiles/edit_cache.dir
+/home/frukt71/Github/Triangles/build/libs/RLogSU/CMakeFiles/rebuild_cache.dir
+/home/frukt71/Github/Triangles/build/source/Geometry/CMakeFiles/Geometry.dir
+/home/frukt71/Github/Triangles/build/source/Geometry/CMakeFiles/test.dir
+/home/frukt71/Github/Triangles/build/source/Geometry/CMakeFiles/edit_cache.dir
+/home/frukt71/Github/Triangles/build/source/Geometry/CMakeFiles/rebuild_cache.dir
