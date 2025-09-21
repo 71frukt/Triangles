@@ -1,5 +1,7 @@
 /home/frukt71/Github/Triangles/build/CMakeFiles/check.dir
 /home/frukt71/Github/Triangles/build/CMakeFiles/Triangles.dir
+/home/frukt71/Github/Triangles/build/CMakeFiles/run.dir
+/home/frukt71/Github/Triangles/build/CMakeFiles/rebuild.dir
 /home/frukt71/Github/Triangles/build/CMakeFiles/test.dir
 /home/frukt71/Github/Triangles/build/CMakeFiles/edit_cache.dir
 /home/frukt71/Github/Triangles/build/CMakeFiles/rebuild_cache.dir

@@ -17,10 +17,10 @@ else()
 endif()
 #------------------------------------------------------------------------
 
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_library(${PROJECT_NAME} STATIC
-    src/primitives/plane3.cpp
-    src/math/vector3.cpp
+    ${SOURCES}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

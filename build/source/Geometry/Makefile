@@ -164,29 +164,77 @@ src/math/vector3.cpp.s:
 	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.s
 .PHONY : src/math/vector3.cpp.s
 
-src/primitives/plane3.o: src/primitives/plane3.cpp.o
-.PHONY : src/primitives/plane3.o
+src/math_engine/collision_handler.o: src/math_engine/collision_handler.cpp.o
+.PHONY : src/math_engine/collision_handler.o
 
 # target to build an object file
-src/primitives/plane3.cpp.o:
-	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/plane3.cpp.o
-.PHONY : src/primitives/plane3.cpp.o
+src/math_engine/collision_handler.cpp.o:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o
+.PHONY : src/math_engine/collision_handler.cpp.o
 
-src/primitives/plane3.i: src/primitives/plane3.cpp.i
-.PHONY : src/primitives/plane3.i
+src/math_engine/collision_handler.i: src/math_engine/collision_handler.cpp.i
+.PHONY : src/math_engine/collision_handler.i
 
 # target to preprocess a source file
-src/primitives/plane3.cpp.i:
-	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/plane3.cpp.i
-.PHONY : src/primitives/plane3.cpp.i
+src/math_engine/collision_handler.cpp.i:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.i
+.PHONY : src/math_engine/collision_handler.cpp.i
 
-src/primitives/plane3.s: src/primitives/plane3.cpp.s
-.PHONY : src/primitives/plane3.s
+src/math_engine/collision_handler.s: src/math_engine/collision_handler.cpp.s
+.PHONY : src/math_engine/collision_handler.s
 
 # target to generate assembly for a file
-src/primitives/plane3.cpp.s:
-	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/plane3.cpp.s
-.PHONY : src/primitives/plane3.cpp.s
+src/math_engine/collision_handler.cpp.s:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.s
+.PHONY : src/math_engine/collision_handler.cpp.s
+
+src/primitives/dump_funcs.o: src/primitives/dump_funcs.cpp.o
+.PHONY : src/primitives/dump_funcs.o
+
+# target to build an object file
+src/primitives/dump_funcs.cpp.o:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o
+.PHONY : src/primitives/dump_funcs.cpp.o
+
+src/primitives/dump_funcs.i: src/primitives/dump_funcs.cpp.i
+.PHONY : src/primitives/dump_funcs.i
+
+# target to preprocess a source file
+src/primitives/dump_funcs.cpp.i:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.i
+.PHONY : src/primitives/dump_funcs.cpp.i
+
+src/primitives/dump_funcs.s: src/primitives/dump_funcs.cpp.s
+.PHONY : src/primitives/dump_funcs.s
+
+# target to generate assembly for a file
+src/primitives/dump_funcs.cpp.s:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.s
+.PHONY : src/primitives/dump_funcs.cpp.s
+
+src/primitives/primitives.o: src/primitives/primitives.cpp.o
+.PHONY : src/primitives/primitives.o
+
+# target to build an object file
+src/primitives/primitives.cpp.o:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o
+.PHONY : src/primitives/primitives.cpp.o
+
+src/primitives/primitives.i: src/primitives/primitives.cpp.i
+.PHONY : src/primitives/primitives.i
+
+# target to preprocess a source file
+src/primitives/primitives.cpp.i:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.i
+.PHONY : src/primitives/primitives.cpp.i
+
+src/primitives/primitives.s: src/primitives/primitives.cpp.s
+.PHONY : src/primitives/primitives.s
+
+# target to generate assembly for a file
+src/primitives/primitives.cpp.s:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.s
+.PHONY : src/primitives/primitives.cpp.s
 
 # Help Target
 help:
@@ -201,9 +249,15 @@ help:
 	@echo "... src/math/vector3.o"
 	@echo "... src/math/vector3.i"
 	@echo "... src/math/vector3.s"
-	@echo "... src/primitives/plane3.o"
-	@echo "... src/primitives/plane3.i"
-	@echo "... src/primitives/plane3.s"
+	@echo "... src/math_engine/collision_handler.o"
+	@echo "... src/math_engine/collision_handler.i"
+	@echo "... src/math_engine/collision_handler.s"
+	@echo "... src/primitives/dump_funcs.o"
+	@echo "... src/primitives/dump_funcs.i"
+	@echo "... src/primitives/dump_funcs.s"
+	@echo "... src/primitives/primitives.o"
+	@echo "... src/primitives/primitives.i"
+	@echo "... src/primitives/primitives.s"
 .PHONY : help
 
 

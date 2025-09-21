@@ -153,6 +153,32 @@ Triangles/fast:
 .PHONY : Triangles/fast
 
 #=============================================================================
+# Target rules for targets named run
+
+# Build rule for target.
+run: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 run
+.PHONY : run
+
+# fast build rule for target.
+run/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/build
+.PHONY : run/fast
+
+#=============================================================================
+# Target rules for targets named rebuild
+
+# Build rule for target.
+rebuild: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 rebuild
+.PHONY : rebuild
+
+# fast build rule for target.
+rebuild/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rebuild.dir/build.make CMakeFiles/rebuild.dir/build
+.PHONY : rebuild/fast
+
+#=============================================================================
 # Target rules for targets named RLogSU
 
 # Build rule for target.
@@ -212,6 +238,8 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... check"
+	@echo "... rebuild"
+	@echo "... run"
 	@echo "... Geometry"
 	@echo "... RLogSU"
 	@echo "... Triangles"

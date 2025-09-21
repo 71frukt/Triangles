@@ -1,9 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <iostream>
-
-#include "RLogSU/logger.hpp"
 
 namespace Geometry::Math {
 
@@ -24,17 +21,19 @@ public:
     [[nodiscard]] double GetLen () const { return std::sqrt(GetLen2()); }
 
 
-    [[nodiscard]] Vector3 operator+(  const Vector3& other ) const;
-    [[nodiscard]] Vector3 operator-()                        const;
-    [[nodiscard]] Vector3 operator-(  const Vector3& other ) const;
-    [[nodiscard]] Vector3 operator/(  const double   scalar) const;
-    [[nodiscard]] double  operator*(  const Vector3& other ) const;     // скалярное
-    [[nodiscard]] Vector3 operator^(  const Vector3& other ) const;     // векторное
-
+    [[nodiscard]] bool    operator== (  const Vector3& other ) const;
+    [[nodiscard]] bool    operator!= (  const Vector3& other ) const;
+    [[nodiscard]] Vector3 operator+  (  const Vector3& other ) const;
+    [[nodiscard]] Vector3 operator-  ()                        const;
+    [[nodiscard]] Vector3 operator-  (  const Vector3& other ) const;
+    [[nodiscard]] Vector3 operator/  (  const double   scalar) const;
+    [[nodiscard]] double  operator*  (  const Vector3& other ) const;     // скалярное
+    [[nodiscard]] Vector3 operator^  (  const Vector3& other ) const;     // векторное
 
     [[nodiscard]] Vector3 Normalized() const { return *this / GetLen(); }
                   Vector3 Normalize ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}
 
+    [[nodiscard]] bool    IsZero    () const { return (x_ == 0) && (y_ == 0) && (z_ == 0); }
 
 private:
     double x_ = 0;

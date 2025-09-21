@@ -76,6 +76,8 @@ preinstall: source/Geometry/preinstall
 # The main recursive "clean" target.
 clean: CMakeFiles/check.dir/clean
 clean: CMakeFiles/Triangles.dir/clean
+clean: CMakeFiles/run.dir/clean
+clean: CMakeFiles/rebuild.dir/clean
 clean: libs/RLogSU/clean
 clean: source/Geometry/clean
 .PHONY : clean
@@ -144,12 +146,12 @@ CMakeFiles/Triangles.dir/all: libs/RLogSU/CMakeFiles/RLogSU.dir/all
 CMakeFiles/Triangles.dir/all: source/Geometry/CMakeFiles/Geometry.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Triangles.dir/build.make CMakeFiles/Triangles.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Triangles.dir/build.make CMakeFiles/Triangles.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=6,7 "Built target Triangles"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=8,9 "Built target Triangles"
 .PHONY : CMakeFiles/Triangles.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Triangles.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 7
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 9
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Triangles.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 0
 .PHONY : CMakeFiles/Triangles.dir/rule
@@ -164,13 +166,65 @@ CMakeFiles/Triangles.dir/clean:
 .PHONY : CMakeFiles/Triangles.dir/clean
 
 #=============================================================================
+# Target rules for target CMakeFiles/run.dir
+
+# All Build rule for target.
+CMakeFiles/run.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num= "Built target run"
+.PHONY : CMakeFiles/run.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/run.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 0
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/run.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 0
+.PHONY : CMakeFiles/run.dir/rule
+
+# Convenience name for target.
+run: CMakeFiles/run.dir/rule
+.PHONY : run
+
+# clean rule for target.
+CMakeFiles/run.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/run.dir/build.make CMakeFiles/run.dir/clean
+.PHONY : CMakeFiles/run.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/rebuild.dir
+
+# All Build rule for target.
+CMakeFiles/rebuild.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rebuild.dir/build.make CMakeFiles/rebuild.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rebuild.dir/build.make CMakeFiles/rebuild.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=10 "Built target rebuild"
+.PHONY : CMakeFiles/rebuild.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/rebuild.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 1
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/rebuild.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 0
+.PHONY : CMakeFiles/rebuild.dir/rule
+
+# Convenience name for target.
+rebuild: CMakeFiles/rebuild.dir/rule
+.PHONY : rebuild
+
+# clean rule for target.
+CMakeFiles/rebuild.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rebuild.dir/build.make CMakeFiles/rebuild.dir/clean
+.PHONY : CMakeFiles/rebuild.dir/clean
+
+#=============================================================================
 # Target rules for target libs/RLogSU/CMakeFiles/RLogSU.dir
 
 # All Build rule for target.
 libs/RLogSU/CMakeFiles/RLogSU.dir/all:
 	$(MAKE) $(MAKESILENT) -f libs/RLogSU/CMakeFiles/RLogSU.dir/build.make libs/RLogSU/CMakeFiles/RLogSU.dir/depend
 	$(MAKE) $(MAKESILENT) -f libs/RLogSU/CMakeFiles/RLogSU.dir/build.make libs/RLogSU/CMakeFiles/RLogSU.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=4,5 "Built target RLogSU"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=6,7 "Built target RLogSU"
 .PHONY : libs/RLogSU/CMakeFiles/RLogSU.dir/all
 
 # Build rule for subdir invocation for target.
@@ -196,12 +250,12 @@ libs/RLogSU/CMakeFiles/RLogSU.dir/clean:
 source/Geometry/CMakeFiles/Geometry.dir/all: libs/RLogSU/CMakeFiles/RLogSU.dir/all
 	$(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/depend
 	$(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=1,2,3 "Built target Geometry"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target Geometry"
 .PHONY : source/Geometry/CMakeFiles/Geometry.dir/all
 
 # Build rule for subdir invocation for target.
 source/Geometry/CMakeFiles/Geometry.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 7
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 source/Geometry/CMakeFiles/Geometry.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/frukt71/Github/Triangles/build/CMakeFiles 0
 .PHONY : source/Geometry/CMakeFiles/Geometry.dir/rule
