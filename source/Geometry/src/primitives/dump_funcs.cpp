@@ -27,13 +27,43 @@ static const char *const ObjTypeStr(ObjType type)
     #undef CASE_TYPE
 }
 
-void Point3::Dump() const
+void Point3::Dump(const std::string& name) const
 {
-    RLSU_LOG("Point [{}]  (typeof {})\n", static_cast<const void*>(this), ObjTypeStr(WhoAmI()));
-
-    RLSU_LOG("\t({}, {}, {})\n", GetX(), GetY(), GetZ());
-
     RLSU_LOG("\n");
+    RLSU_LOG("{} [{}]  (typeof {} {{\n", name, static_cast<const void*>(this), ObjTypeStr(WhoAmI()));
+    RLSU_BASETAB_INCREACE;
+
+    RLSU_LOG("({}, {}, {})\n", GetX(), GetY(), GetZ());
+    
+    RLSU_BASETAB_DECREACE;
+    RLSU_LOG("}}\n");
+}
+
+void Line3::Dump(const std::string& name) const
+{
+    RLSU_LOG("\n");
+    RLSU_LOG("{} [{}]  (typeof {}) {{\n", name, static_cast<const void*>(this), ObjTypeStr(WhoAmI()));
+    RLSU_BASETAB_INCREACE;
+
+    origin_.Dump("origin");
+    normalized_director_.Dump("normd_dir");
+
+
+    RLSU_BASETAB_DECREACE;
+    RLSU_LOG("}}\n");
+}
+
+void Plane3::Dump(const std::string& name) const
+{
+    RLSU_LOG("\n");
+    RLSU_LOG("{} [{}]  (typeof {}) {{\n", name, static_cast<const void*>(this), ObjTypeStr(WhoAmI()));
+    RLSU_BASETAB_INCREACE;
+
+    RLSU_LOG("{}x + {}y + {}z + {} = 0\n", GetA(), GetB(), GetC(), GetD());
+    normd_normality_.Dump("normd_normality");
+    
+    RLSU_BASETAB_DECREACE;
+    RLSU_LOG("}}\n");
 }
 
 }

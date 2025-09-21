@@ -92,11 +92,10 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o: \
  /usr/include/c++/13/tr1/poly_hermite.tcc \
  /usr/include/c++/13/tr1/poly_laguerre.tcc \
  /usr/include/c++/13/tr1/riemann_zeta.tcc \
- /home/frukt71/Github/Triangles/source/Geometry/include/Geometry/math/point3.hpp \
  /home/frukt71/Github/Triangles/libs/RLogSU/include/RLogSU/logger.hpp \
- /usr/include/c++/13/iostream /usr/include/c++/13/ostream \
- /usr/include/c++/13/ios /usr/include/c++/13/iosfwd \
- /usr/include/c++/13/bits/stringfwd.h \
+ /usr/include/c++/13/cstddef /usr/include/c++/13/iostream \
+ /usr/include/c++/13/ostream /usr/include/c++/13/ios \
+ /usr/include/c++/13/iosfwd /usr/include/c++/13/bits/stringfwd.h \
  /usr/include/c++/13/bits/memoryfwd.h /usr/include/c++/13/bits/postypes.h \
  /usr/include/c++/13/cwchar /usr/include/wchar.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdarg.h \
@@ -164,7 +163,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/13/bits/charconv.h \
  /usr/include/c++/13/bits/basic_string.tcc \
- /usr/include/c++/13/bits/memory_resource.h /usr/include/c++/13/cstddef \
+ /usr/include/c++/13/bits/memory_resource.h \
  /usr/include/c++/13/bits/uses_allocator.h \
  /usr/include/c++/13/bits/uses_allocator_args.h /usr/include/c++/13/tuple \
  /usr/include/c++/13/bits/ranges_util.h \
@@ -190,4 +189,5 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o: \
  /usr/include/assert.h /usr/include/fmt/core.h \
  /usr/include/c++/13/cstring /usr/include/string.h /usr/include/strings.h \
  /usr/include/c++/13/iterator /usr/include/c++/13/bits/stream_iterator.h \
- /home/frukt71/Github/Triangles/libs/RLogSU/include/RLogSU/error_handler.hpp
+ /home/frukt71/Github/Triangles/libs/RLogSU/include/RLogSU/error_handler.hpp \
+ /home/frukt71/Github/Triangles/source/Geometry/include/Geometry/math/point3.hpp

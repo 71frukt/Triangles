@@ -21,7 +21,7 @@ public:
 
     [[nodiscard]] virtual ObjType WhoAmI() const = 0;
 
-    virtual void Dump() const = 0;
+    virtual void Dump(const std::string& name = "some_obj") const = 0;
 
 private:
 };
@@ -33,7 +33,7 @@ class NotAnObj : public GeomObj
 public:
     [[nodiscard]] virtual ObjType WhoAmI() const override final { return ObjType::NOT_AN_OBJ; };
 
-    virtual void Dump() const override final { RLSU_DUMP("NOT-AN-OBJECT [{}]", static_cast<const void*>(this)); };
+    virtual void Dump(const std::string& name = "some_obj") const override final { RLSU_DUMP("NOT-AN-OBJECT [{}]", static_cast<const void*>(this)); };
 };
 
 }

@@ -20,9 +20,12 @@ class Point3 : public Geometry::Math::Point3
              , public Primitive
 {
 public:
+    Point3(double x, double y, double z) : Geometry::Math::Point3(x, y, z) {}
+
     [[nodiscard]] virtual ObjType WhoAmI() const override final { return ObjType::POINT3; };
 
-    virtual void Dump() const override;
+    virtual void Dump(const std::string& name = "some_obj") const override;
+
 private:
 
 };
@@ -35,6 +38,8 @@ public:
 
     [[nodiscard]] virtual ObjType WhoAmI() const override final { return ObjType::LINE3; };
     
+    virtual void Dump(const std::string& name = "some_obj") const override;
+
 private:
     Point3 origin_;
     Math::Vector3 normalized_director_;
@@ -63,6 +68,8 @@ public:
     {
         RLSU_VERIFY(normd_normality_.GetLen2() != 0);
     }
+
+    virtual void Dump(const std::string& name = "some_obj") const override;
 
 private:
 

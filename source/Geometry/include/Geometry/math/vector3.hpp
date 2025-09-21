@@ -2,6 +2,8 @@
 
 #include <cmath>
 
+#include "RLogSU/logger.hpp"
+
 namespace Geometry::Math {
 
 class Point3;
@@ -34,6 +36,20 @@ public:
                   Vector3 Normalize ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}
 
     [[nodiscard]] bool    IsZero    () const { return (x_ == 0) && (y_ == 0) && (z_ == 0); }
+
+
+    void Dump(const std::string& name = "some_vector") const
+    {
+        RLSU_LOG("\n");
+        RLSU_LOG("{} [{}] {{\n", name, static_cast<const void*>(this));
+        RLSU_BASETAB_INCREACE;
+
+        RLSU_LOG("({}, {}, {})\n", GetX(), GetY(), GetZ());
+        RLSU_LOG("length = {}\n", GetLen());
+        
+        RLSU_BASETAB_DECREACE;
+        RLSU_LOG("}}\n");
+    }
 
 private:
     double x_ = 0;
