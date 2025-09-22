@@ -190,4 +190,5 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o: \
  /usr/include/c++/13/cstring /usr/include/string.h /usr/include/strings.h \
  /usr/include/c++/13/iterator /usr/include/c++/13/bits/stream_iterator.h \
  /home/frukt71/Github/Triangles/libs/RLogSU/include/RLogSU/error_handler.hpp \
+ /home/frukt71/Github/Triangles/source/Geometry/include/Geometry/math/double_handle.hpp \
  /home/frukt71/Github/Triangles/source/Geometry/include/Geometry/math/point3.hpp

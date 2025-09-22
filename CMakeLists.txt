@@ -48,7 +48,7 @@ add_custom_target(rebuild
 )
 
 
-# target_compile_definitions(${PROJECT_NAME} PRIVATE MODULE_NAME="${PROJECT_NAME}")
+target_compile_definitions(${PROJECT_NAME} PRIVATE MODULE_NAME="${PROJECT_NAME}")
 
 if(DEBUG_MODE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG_MODE)

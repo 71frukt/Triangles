@@ -3,7 +3,7 @@
 
 CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
   /usr/include/stdc-predef.h \
-  ../source/Geometry/include/Geometry/primitives/primitives.hpp \
+  ../source/Geometry/include/Geometry/math_engine/collision_handler.hpp \
   ../source/Geometry/include/Geometry/common/geometry_obj.hpp \
   ../libs/RLogSU/include/RLogSU/logger.hpp \
   /usr/include/c++/13/cstddef \
@@ -260,7 +260,8 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
   /usr/include/c++/13/bits/ranges_algobase.h \
   /usr/include/c++/13/pstl/glue_memory_defs.h \
   /usr/include/c++/13/pstl/execution_defs.h \
-  ../source/Geometry/include/Geometry/math/point3.hpp \
+  ../source/Geometry/include/Geometry/primitives/primitives.hpp \
+  ../source/Geometry/include/Geometry/math/math.hpp \
   ../source/Geometry/include/Geometry/math/vector3.hpp \
   /usr/include/c++/13/cmath \
   /usr/include/math.h \
@@ -285,8 +286,52 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
   /usr/include/c++/13/tr1/modified_bessel_func.tcc \
   /usr/include/c++/13/tr1/poly_hermite.tcc \
   /usr/include/c++/13/tr1/poly_laguerre.tcc \
-  /usr/include/c++/13/tr1/riemann_zeta.tcc
+  /usr/include/c++/13/tr1/riemann_zeta.tcc \
+  ../source/Geometry/include/Geometry/math/double_handle.hpp \
+  ../source/Geometry/include/Geometry/math/point3.hpp \
+  /usr/include/c++/13/functional \
+  /usr/include/c++/13/bits/std_function.h \
+  /usr/include/c++/13/unordered_map \
+  /usr/include/c++/13/bits/unordered_map.h \
+  /usr/include/c++/13/bits/hashtable.h \
+  /usr/include/c++/13/bits/hashtable_policy.h \
+  /usr/include/c++/13/bits/enable_special_members.h \
+  /usr/include/c++/13/bits/node_handle.h \
+  /usr/include/c++/13/bits/erase_if.h \
+  /usr/include/c++/13/vector \
+  /usr/include/c++/13/bits/stl_vector.h \
+  /usr/include/c++/13/bits/stl_bvector.h \
+  /usr/include/c++/13/bits/vector.tcc \
+  /usr/include/c++/13/array \
+  /usr/include/c++/13/bits/stl_algo.h \
+  /usr/include/c++/13/bits/algorithmfwd.h \
+  /usr/include/c++/13/bits/stl_heap.h \
+  /usr/include/c++/13/bits/uniform_int_dist.h
 
+
+/usr/include/c++/13/bits/stl_heap.h:
+
+/usr/include/c++/13/bits/stl_algo.h:
+
+/usr/include/c++/13/array:
+
+/usr/include/c++/13/bits/vector.tcc:
+
+/usr/include/c++/13/bits/stl_bvector.h:
+
+/usr/include/c++/13/bits/stl_vector.h:
+
+/usr/include/c++/13/bits/erase_if.h:
+
+/usr/include/c++/13/bits/hashtable_policy.h:
+
+/usr/include/c++/13/bits/unordered_map.h:
+
+/usr/include/c++/13/functional:
+
+../source/Geometry/include/Geometry/math/point3.hpp:
+
+../source/Geometry/include/Geometry/math/double_handle.hpp:
 
 /usr/include/c++/13/tr1/poly_laguerre.tcc:
 
@@ -308,8 +353,6 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/mathcalls.h:
 
-/usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
-
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 
 /usr/include/x86_64-linux-gnu/bits/fp-logb.h:
@@ -320,7 +363,11 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 ../source/Geometry/include/Geometry/math/vector3.hpp:
 
-../source/Geometry/include/Geometry/math/point3.hpp:
+/usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
+
+../source/Geometry/include/Geometry/math/math.hpp:
+
+../source/Geometry/include/Geometry/primitives/primitives.hpp:
 
 /usr/include/c++/13/pstl/execution_defs.h:
 
@@ -454,6 +501,8 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/atomic_word.h:
 
+/usr/include/c++/13/bits/algorithmfwd.h:
+
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/c++/13/bits/uses_allocator_args.h:
@@ -476,17 +525,27 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/endian.h:
 
+/usr/include/c++/13/vector:
+
 ../source/main.cpp:
-
-/usr/include/math.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
 
 /usr/include/x86_64-linux-gnu/bits/typesizes.h:
 
 /usr/include/c++/13/bits/stl_construct.h:
 
 /usr/include/c++/13/bits/std_mutex.h:
+
+../source/Geometry/include/Geometry/math_engine/collision_handler.hpp:
+
+/usr/include/syscall.h:
+
+/usr/include/c++/13/system_error:
+
+/usr/include/c++/13/compare:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/x86_64-linux-gnu/bits/endianness.h:
 
@@ -518,6 +577,8 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 ../source/Geometry/include/Geometry/common/geometry_obj.hpp:
 
+/usr/include/c++/13/unordered_map:
+
 /usr/include/c++/13/bits/allocator.h:
 
 /usr/include/c++/13/bits/hash_bytes.h:
@@ -525,6 +586,8 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
+
+/usr/include/c++/13/bits/node_handle.h:
 
 /usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
@@ -557,8 +620,6 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 /usr/include/x86_64-linux-gnu/bits/timex.h:
 
 /usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
-
-../source/Geometry/include/Geometry/primitives/primitives.hpp:
 
 /usr/include/c++/13/bits/locale_classes.h:
 
@@ -608,6 +669,10 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 /usr/include/x86_64-linux-gnu/bits/types/sigset_t.h:
 
+/usr/include/math.h:
+
+/usr/include/x86_64-linux-gnu/bits/types/__FILE.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h:
 
 /usr/include/c++/13/bits/localefwd.h:
@@ -651,16 +716,6 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 /usr/include/c++/13/bit:
 
 /usr/include/c++/13/bits/basic_string.tcc:
-
-/usr/include/syscall.h:
-
-/usr/include/c++/13/system_error:
-
-/usr/include/c++/13/compare:
-
-/usr/include/asm-generic/errno.h:
-
-/usr/include/x86_64-linux-gnu/bits/types/struct_sched_param.h:
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:
 
@@ -758,9 +813,13 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 
 /usr/include/asm-generic/errno-base.h:
 
+/usr/include/c++/13/bits/hashtable.h:
+
 /usr/include/x86_64-linux-gnu/bits/types/error_t.h:
 
 /usr/include/c++/13/bits/stl_raw_storage_iter.h:
+
+/usr/include/c++/13/bits/uniform_int_dist.h:
 
 /usr/include/c++/13/bits/locale_classes.tcc:
 
@@ -775,6 +834,8 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 /usr/include/c++/13/bits/ranges_util.h:
 
 /usr/include/x86_64-linux-gnu/c++/13/bits/ctype_base.h:
+
+/usr/include/c++/13/bits/std_function.h:
 
 /usr/include/c++/13/bits/char_traits.h:
 
@@ -821,6 +882,8 @@ CMakeFiles/Triangles.dir/source/main.cpp.o: ../source/main.cpp \
 /usr/include/stdint.h:
 
 /usr/include/linux/limits.h:
+
+/usr/include/c++/13/bits/enable_special_members.h:
 
 /usr/include/x86_64-linux-gnu/bits/posix2_lim.h:
 

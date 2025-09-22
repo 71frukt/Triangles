@@ -5,7 +5,7 @@
 
 namespace Geometry::Math {
 
-Vector3::Vector3(const Point3 point) : x_(point.GetX()), y_(point.GetY()), z_(point.GetZ()) 
+Vector3::Vector3(const Point3& point) : x_(point.GetX()), y_(point.GetY()), z_(point.GetZ()) 
 {
 
 }
@@ -33,6 +33,11 @@ Vector3 Vector3::operator- () const
 Vector3 Vector3::operator- (const Vector3& other) const
 {
     return *this + (-other);
+}
+
+Vector3 Vector3::operator* (double scalar) const 
+{
+    return Vector3(x_ * scalar, y_ * scalar, z_ * scalar);
 }
 
 Vector3 Vector3::operator/ (double scalar) const 

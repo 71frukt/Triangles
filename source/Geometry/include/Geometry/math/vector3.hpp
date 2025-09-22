@@ -4,7 +4,12 @@
 
 #include "RLogSU/logger.hpp"
 
+#include "Geometry/math/double_handle.hpp"
+
 namespace Geometry::Math {
+
+extern bool DoubleEq  (double a, double b, double eps);
+extern bool DoubleZero(double a, double eps);
 
 class Point3;
 
@@ -13,7 +18,7 @@ class Vector3
 public:
     Vector3() = default;
     Vector3(const double x, const double y, const double z) : x_(x), y_(y), z_(z) {};
-    Vector3(const Point3 point);
+    Vector3(const Point3& point);
 
     [[nodiscard]] double GetX   () const { return x_; }
     [[nodiscard]] double GetY   () const { return y_; }
@@ -28,24 +33,29 @@ public:
     [[nodiscard]] Vector3 operator+  (  const Vector3& other ) const;
     [[nodiscard]] Vector3 operator-  ()                        const;
     [[nodiscard]] Vector3 operator-  (  const Vector3& other ) const;
+    [[nodiscard]] Vector3 operator*  (  const double   scalar) const;
     [[nodiscard]] Vector3 operator/  (  const double   scalar) const;
     [[nodiscard]] double  operator*  (  const Vector3& other ) const;     // скалярное
     [[nodiscard]] Vector3 operator^  (  const Vector3& other ) const;     // векторное
 
-    [[nodiscard]] Vector3 Normalized() const { return *this / GetLen(); }
-                  Vector3 Normalize ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}
+    [[nodiscard]] Vector3 Normalized () const { return *this / GetLen(); }
+                  Vector3 Normalize  ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}
 
-    [[nodiscard]] bool    IsZero    () const { return (x_ == 0) && (y_ == 0) && (z_ == 0); }
+    [[nodiscard]] bool    IsZero     () const { return (DoubleZero(x_)) && DoubleZero(y_) && DoubleZero(z_); }
+
+    [[nodiscard]] bool    Collinear  (const Vector3& other) const { return (*this ^ other).IsZero(); }
+    
+    [[nodiscard]] bool    Normal     (const Vector3& other) const { return DoubleZero(*this * other); }
 
 
     void Dump(const std::string& name = "some_vector") const
     {
         RLSU_LOG("\n");
-        RLSU_LOG("{} [{}] {{\n", name, static_cast<const void*>(this));
+        RLSU_LOG("'{}' [{}] {{\n", name, static_cast<const void*>(this));
         RLSU_BASETAB_INCREACE;
 
-        RLSU_LOG("({}, {}, {})\n", GetX(), GetY(), GetZ());
-        RLSU_LOG("length = {}\n", GetLen());
+        RLSU_LOG("({:.2g}, {:.2g}, {:.2g})\n", GetX(), GetY(), GetZ());
+        RLSU_LOG("length = {:.2g}\n", GetLen());
         
         RLSU_BASETAB_DECREACE;
         RLSU_LOG("}}\n");

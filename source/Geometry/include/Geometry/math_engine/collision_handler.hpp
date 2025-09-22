@@ -12,18 +12,19 @@ namespace Geometry::MathEngine {
 
 enum CollisionCodeT
 {  
-    DIFF_TYPE    = 0 << 0,
+    NOTHING      = 0,
+    
     ONE_TYPE     = 1 << 0,
-
-    NOT_CROSS    = 0 << 1,
     CROSS        = 1 << 1,
-
-    NOT_PARALLEL = 0 << 2,
     PARALLEL     = 1 << 2,
 
-    LIES_IN      = CROSS   && PARALLEL,
-    EQUAL        = LIES_IN && ONE_TYPE
+    SKEW         = ONE_TYPE & ~PARALLEL & ~CROSS,
+    COLLINEAR    = ONE_TYPE |  PARALLEL,
+    LIES_IN      = CROSS    |  PARALLEL,
+    EQUAL        = LIES_IN  |  ONE_TYPE
 };
+
+[[nodiscard]] std::string CollisionCodeStr(CollisionCodeT code);
 
 
 class Interactor
@@ -86,6 +87,78 @@ private:
     const Primitives::Plane3& plane_;
 };
 
+
+class PointLineInteractor : public Interactor
+{
+public:
+    PointLineInteractor(const Primitives::Point3& point, const Primitives::Line3& line)
+        : point_(point)
+        , line_ (line)
+        {}
+
+    PointLineInteractor(const Primitives::Line3& line, const Primitives::Point3& point)
+        : point_(point)
+        , line_ (line)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return point_; };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return line_ ; };
+
+private:
+    const Primitives::Point3& point_;
+    const Primitives::Line3 & line_;
+};
+
+
+
+class LineLineInteractor : public Interactor
+{
+public:
+    LineLineInteractor(const Primitives::Line3& line1, const Primitives::Line3& line2)
+        : line1_(line1)
+        , line2_(line2)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line1_; };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return line2_; };
+
+private:
+    const Primitives::Line3& line1_;
+    const Primitives::Line3& line2_;
+};
+
+class LinePlaneInteractor : public Interactor
+{
+public:
+    LinePlaneInteractor(const Primitives::Line3& line, const Primitives::Plane3& plane)
+        : line_ (line)
+        , plane_(plane)
+        {}
+
+    LinePlaneInteractor(const Primitives::Plane3& plane, const Primitives::Line3& line)
+        : line_ (line)
+        , plane_(plane)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line_; };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return plane_; };
+
+private:
+    const Primitives::Line3 & line_;
+    const Primitives::Plane3& plane_;
+};
 
 // class PlanePlaneInteractor : public Interactor
 // {

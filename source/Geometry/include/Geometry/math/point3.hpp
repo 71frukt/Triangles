@@ -4,10 +4,13 @@
 
 namespace Geometry::Math {
 
+extern bool DoubleEq(double a, double b, double eps);
+
 class Point3
 {
 public:
-    Point3(const double x, const double y, const double z) : rad_vec_(x, y, z) {};
+    Point3(const double x, const double y, const double z) : rad_vec_(x, y, z) {}
+    Point3(const Vector3& rad_vec)                         : rad_vec_(rad_vec) {}
     Point3() = default;
     
     [[nodiscard]] double GetX() const { return rad_vec_.GetX(); }

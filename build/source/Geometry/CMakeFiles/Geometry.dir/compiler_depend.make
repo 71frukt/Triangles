@@ -236,6 +236,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o: ../source/Geomet
   /usr/include/c++/13/iterator \
   /usr/include/c++/13/bits/stream_iterator.h \
   ../libs/RLogSU/include/RLogSU/error_handler.hpp \
+  ../source/Geometry/include/Geometry/math/double_handle.hpp \
   ../source/Geometry/include/Geometry/math/point3.hpp
 
 source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o: ../source/Geometry/src/math_engine/collision_handler.cpp \
@@ -498,7 +499,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o:
   /usr/include/c++/13/pstl/glue_memory_defs.h \
   /usr/include/c++/13/pstl/execution_defs.h \
   ../source/Geometry/include/Geometry/primitives/primitives.hpp \
-  ../source/Geometry/include/Geometry/math/point3.hpp \
+  ../source/Geometry/include/Geometry/math/math.hpp \
   ../source/Geometry/include/Geometry/math/vector3.hpp \
   /usr/include/c++/13/cmath \
   /usr/include/math.h \
@@ -524,6 +525,8 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o:
   /usr/include/c++/13/tr1/poly_hermite.tcc \
   /usr/include/c++/13/tr1/poly_laguerre.tcc \
   /usr/include/c++/13/tr1/riemann_zeta.tcc \
+  ../source/Geometry/include/Geometry/math/double_handle.hpp \
+  ../source/Geometry/include/Geometry/math/point3.hpp \
   /usr/include/c++/13/functional \
   /usr/include/c++/13/bits/std_function.h \
   /usr/include/c++/13/unordered_map \
@@ -802,7 +805,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o: ../sour
   /usr/include/c++/13/bits/ranges_algobase.h \
   /usr/include/c++/13/pstl/glue_memory_defs.h \
   /usr/include/c++/13/pstl/execution_defs.h \
-  ../source/Geometry/include/Geometry/math/point3.hpp \
+  ../source/Geometry/include/Geometry/math/math.hpp \
   ../source/Geometry/include/Geometry/math/vector3.hpp \
   /usr/include/c++/13/cmath \
   /usr/include/math.h \
@@ -827,7 +830,9 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o: ../sour
   /usr/include/c++/13/tr1/modified_bessel_func.tcc \
   /usr/include/c++/13/tr1/poly_hermite.tcc \
   /usr/include/c++/13/tr1/poly_laguerre.tcc \
-  /usr/include/c++/13/tr1/riemann_zeta.tcc
+  /usr/include/c++/13/tr1/riemann_zeta.tcc \
+  ../source/Geometry/include/Geometry/math/double_handle.hpp \
+  ../source/Geometry/include/Geometry/math/point3.hpp
 
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: ../source/Geometry/src/primitives/primitives.cpp \
   /usr/include/stdc-predef.h \
@@ -1088,7 +1093,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: ../sour
   /usr/include/c++/13/bits/ranges_algobase.h \
   /usr/include/c++/13/pstl/glue_memory_defs.h \
   /usr/include/c++/13/pstl/execution_defs.h \
-  ../source/Geometry/include/Geometry/math/point3.hpp \
+  ../source/Geometry/include/Geometry/math/math.hpp \
   ../source/Geometry/include/Geometry/math/vector3.hpp \
   /usr/include/c++/13/cmath \
   /usr/include/math.h \
@@ -1113,7 +1118,9 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: ../sour
   /usr/include/c++/13/tr1/modified_bessel_func.tcc \
   /usr/include/c++/13/tr1/poly_hermite.tcc \
   /usr/include/c++/13/tr1/poly_laguerre.tcc \
-  /usr/include/c++/13/tr1/riemann_zeta.tcc
+  /usr/include/c++/13/tr1/riemann_zeta.tcc \
+  ../source/Geometry/include/Geometry/math/double_handle.hpp \
+  ../source/Geometry/include/Geometry/math/point3.hpp
 
 
 ../source/Geometry/src/primitives/primitives.cpp:
@@ -1484,6 +1491,8 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: ../sour
 
 /usr/include/x86_64-linux-gnu/bits/fp-fast.h:
 
+../source/Geometry/include/Geometry/math/math.hpp:
+
 /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h:
 
 /usr/include/c++/13/bits/hashtable.h:
@@ -1709,6 +1718,8 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: ../sour
 /usr/include/x86_64-linux-gnu/bits/uio_lim.h:
 
 /usr/include/c++/13/bits/stream_iterator.h:
+
+../source/Geometry/include/Geometry/math/double_handle.hpp:
 
 ../source/Geometry/src/math_engine/collision_handler.cpp:
 
