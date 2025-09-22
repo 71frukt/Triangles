@@ -2,10 +2,13 @@
 #include <memory>
 
 #include "Geometry/common/geometry_obj.hpp"
+#include "Geometry/math/double_handle.hpp"
+#include "Geometry/math/vector3.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/math_engine/collision_handler.hpp"
 #include "Geometry/math/math.hpp"
 
+#include "RLogSU/error_handler.hpp"
 #include "RLogSU/logger.hpp"
 
 
@@ -44,15 +47,19 @@ const CollisionCodeT PointPlaneInteractor::CollisionCode() const
 {
     ASSERT_HANDLE(plane_.Assert());
 
-    if (plane_.GetA() * point_.GetX() + 
-        plane_.GetB() * point_.GetY() + 
-        plane_.GetC() * point_.GetZ() + plane_.GetD() == 0)
+    if (Math::DoubleZero( 
+        plane_.GetA() * point_.GetX() + 
+          plane_.GetB() * point_.GetY() + 
+          plane_.GetC() * point_.GetZ() + plane_.GetD())
+        )
     {
         return LIES_IN;
     }
 
     else
+    {
         return NOTHING;
+    }
 }
 
 const CollisionCodeT PointLineInteractor::CollisionCode() const
@@ -61,7 +68,7 @@ const CollisionCodeT PointLineInteractor::CollisionCode() const
 
     Math::Vector3 r1 = line_.GetOrigin() - point_;
 
-    if (Distance() == 0)
+    if (Math::DoubleZero(Distance()))
         return LIES_IN;
 
     else
@@ -77,7 +84,7 @@ const CollisionCodeT LineLineInteractor::CollisionCode() const
     const Math::Vector3& normd_dir1 = line1_.GetNormdDir();
     const Math::Vector3& normd_dir2 = line2_.GetNormdDir();
 
-    if (Distance() == 0)
+    if (Math::DoubleZero(Distance()))
     {
         if (normd_dir1.Collinear(normd_dir2))
             return EQUAL;
@@ -111,6 +118,32 @@ const CollisionCodeT LinePlaneInteractor::CollisionCode() const
         code |= PARALLEL;
 
     else
+        code |= CROSS;
+
+    return CollisionCodeT(code);
+}
+
+
+const CollisionCodeT PlanePlaneInteractor::CollisionCode() const
+{
+    ASSERT_HANDLE(plane1_.Assert());
+    ASSERT_HANDLE(plane2_.Assert());
+
+    const Math::Vector3& plane1_normd_norm = plane1_.GetNormdNormality();
+    const Math::Vector3& plane2_normd_norm = plane2_.GetNormdNormality();
+
+    int code = NOTHING;
+
+    if (plane1_normd_norm.Collinear(plane2_normd_norm))
+    {
+        code |= PARALLEL;
+
+        RLSU_ASSERT(plane1_normd_norm == plane2_normd_norm);
+        if (Math::DoubleEq(plane1_.GetD(), plane2_.GetD()))
+            code = EQUAL;
+    }
+
+    else 
         code |= CROSS;
 
     return CollisionCodeT(code);
@@ -173,6 +206,23 @@ double LinePlaneInteractor::Distance() const
 
     else
         return 0;
+}
+
+double PlanePlaneInteractor::Distance() const
+{
+    ASSERT_HANDLE(plane1_.Assert());
+    ASSERT_HANDLE(plane2_.Assert());
+
+    if (CollisionCode() == EQUAL)
+        return 0;
+
+    if (CollisionCode() == CROSS)
+        return 0;
+
+    // else if PARALLEL
+
+    // (A, B, C) is normalized vector
+    return std::abs(plane1_.GetD() - plane2_.GetD());
 }
 // ==========/ DISTANCE ============================================================
 
@@ -274,6 +324,35 @@ GeomObjUniqPtr LinePlaneInteractor::Intersect() const
         return std::make_unique<NotAnObj>();
 }
 
+
+GeomObjUniqPtr PlanePlaneInteractor::Intersect() const
+{
+    ASSERT_HANDLE(plane1_.Assert());
+    ASSERT_HANDLE(plane2_.Assert());
+
+    if (CollisionCode() == EQUAL)
+        return std::make_unique<Primitives::Plane3>(plane1_);
+
+    if (CollisionCode() == PARALLEL)
+        return std::make_unique<NotAnObj>();
+
+    // else if CROSS
+    // cross_line = r0 + v * t, v = [n1 ^ n2]
+    // r0 = (D2 * [n1 ^ v] - D1 * [n2 ^ v]) / |v|**2
+
+    const Math::Vector3& n1 = plane1_.GetNormdNormality();
+    const Math::Vector3& n2 = plane2_.GetNormdNormality();
+    const double         D1 = plane1_.GetD();
+    const double         D2 = plane2_.GetD();
+
+    const Math::Vector3  v  = n1 ^ n2;
+    const Math::Vector3  r0 = ((n1 ^ v) * D2 - (n2 ^ v) * D1) / v.GetLen2();
+
+    RLSU_ASSERT(Interact(Primitives::Line3(r0, v), plane1_)->CollisionCode() == LIES_IN
+             && Interact(Primitives::Line3(r0, v), plane2_)->CollisionCode() == LIES_IN);
+
+    return std::make_unique<Primitives::Line3>(r0, v);
+}
 // ==========/ INTERSECT ===========================================================
 
 
@@ -361,6 +440,14 @@ std::unique_ptr<Interactor> Interact(const GeomObj& obj1, const GeomObj& obj2)
             };
         // =====================================================================
 
+        table[ObjType::PLANE3][ObjType::PLANE3] = 
+            [](const GeomObj& obj1, const GeomObj& obj2) {
+                return std::make_unique<PlanePlaneInteractor>(
+                    static_cast<const Primitives::Plane3&>(obj1),
+                    static_cast<const Primitives::Plane3&>(obj2)
+                ); 
+            };
+    
         return table;
     }();
 

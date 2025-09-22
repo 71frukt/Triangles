@@ -26,16 +26,19 @@ int main()
     // RLSU_DUMP(fig2->Dump("fig2"));
 
 
-    Geometry::Primitives::Line3 line1({0, 0, 0}, {0.5, 5, 1});
-    Geometry::Primitives::Plane3 plane(0, 0, 1, 5);
+    Geometry::Primitives::Plane3 plane1(0, 0, 1, 3);
+    Geometry::Primitives::Plane3 plane2(0, 1, 1, 3);
 
-    auto interactor = Geometry::MathEngine::Interact(line1, plane);
+    auto interactor = Geometry::MathEngine::Interact(plane1, plane2);
     auto fig1 = interactor->Intersect();
 
     RLSU_INFO("inter1 = {}", Geometry::MathEngine::CollisionCodeStr(interactor->CollisionCode()));
     RLSU_INFO("dist1  = {}", interactor->Distance());
 
-    fig1->Dump("plane x line");
+    plane1.Dump("plane1");
+    plane2.Dump("plane2");
+    
+    fig1->Dump("plane x plane");
 
     RLSU_INFO("END");
 }

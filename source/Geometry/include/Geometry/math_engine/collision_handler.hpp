@@ -160,26 +160,27 @@ private:
     const Primitives::Plane3& plane_;
 };
 
-// class PlanePlaneInteractor : public Interactor
-// {
-// public:
-//     PlanePlaneInteractor(const Primitives::Plane3& plane1, const Primitives::Plane3& plane2)
-//         : plane1_(plane1)
-//         , plane2_(plane2)
-//         {}
 
-//     [[nodiscard]] virtual double            Distance () const override final;
-//     [[nodiscard]] virtual GeomObj       Intersect() const override final;
+class PlanePlaneInteractor : public Interactor
+{
+public:
+    PlanePlaneInteractor(const Primitives::Plane3& plane1, const Primitives::Plane3& plane2)
+        : plane1_(plane1)
+        , plane2_(plane2)
+        {}
 
-//     [[nodiscard]] virtual const GeomObj& GeyObj1 () const override final { return plane1_; };
-//     [[nodiscard]] virtual const GeomObj& GeyObj2 () const override final { return plane2_; };
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-// private:
-//     const Primitives::Plane3& plane1_;
-//     const Primitives::Plane3& plane2_;
-// };
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return plane1_; };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return plane2_; };
 
-// GeomObj CollisionPlanePlane(const Primitives::Plane3& plane1, const Primitives::Plane3& plane2);
+private:
+    const Primitives::Plane3& plane1_;
+    const Primitives::Plane3& plane2_;
+};
+
 
 
 

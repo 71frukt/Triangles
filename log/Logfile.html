@@ -67,8 +67,34 @@
 [Triangles] <span class=cyan>[INFO]    </span>inter1 = CROSS 
 [Triangles] <span class=cyan>[INFO]    </span>dist1  = 0
 
-'plane x line' [0x624f3e5022b0]  (typeof POINT3) {
-  (-2.5, -25, -5)
+'plane1' [0x7ffc05be2370]  (typeof PLANE3) {
+  +0.00x +0.00y +1.00z +3.00 = 0
+  
+  'normd_normality' [0x7ffc05be2378] {
+    (0, 0, 1)
+    length = 1
+  }
+}
+
+'plane2' [0x7ffc05be23a0]  (typeof PLANE3) {
+  +0.00x +0.71y +0.71z +2.12 = 0
+  
+  'normd_normality' [0x7ffc05be23a8] {
+    (0, 0.71, 0.71)
+    length = 1
+  }
+}
+
+'plane x plane' [0x5dd5551695b0]  (typeof LINE3) {
+  
+  'origin' [0x5dd5551695b8]  (typeof POINT3) {
+    (0.00, 0.00, -3.00)
+  }
+  
+  'normd_dir' [0x5dd5551695d8] {
+    (-1, 0, 0)
+    length = 1
+  }
 }
 [Triangles] <span class=cyan>[INFO]    </span>END
 		</pre> 

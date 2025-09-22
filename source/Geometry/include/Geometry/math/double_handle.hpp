@@ -4,14 +4,14 @@
 
 namespace Geometry::Math {
 
-[[nodiscard]] inline bool DoubleEq(double a, double b, double eps = 1e-7)
+[[nodiscard]] inline bool DoubleEq(double a, double b, double eps = 1e-10)
 {
-    return std::abs(a - b) <= eps * std::max(std::abs(a), std::abs(b));
+    return std::abs(a - b) <= eps;
 }
 
-[[nodiscard]] inline bool DoubleZero(double a, double eps = 1e-7)
+[[nodiscard]] inline bool DoubleZero(double a, double eps = 1e-10)
 {
-    return std::abs(a) <= eps * a;
+    return std::abs(a) <= eps;
 }
 
 } // namespace Geometry::Math
