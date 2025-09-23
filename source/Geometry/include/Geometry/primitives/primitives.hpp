@@ -36,8 +36,8 @@ private:
 class Line3 : public Primitive
 {
 public:
-    Line3(const Point3& origin, const Math::Vector3& director) : origin_(origin), normd_dir_(director.Normalized()) {}
-    // Line3(Point3 point1, )
+    Line3(const Point3& origin, const Math::Vector3& director) : origin_(origin), normd_dir_(director         .Normalized()) {}
+    Line3(const Point3& point1, const Point3& point2)          : origin_(point1), normd_dir_((point2 - point1).Normalized()) {}
 
     [[nodiscard]] virtual ObjType WhoAmI() const override final { return ObjType::LINE3; };
     
