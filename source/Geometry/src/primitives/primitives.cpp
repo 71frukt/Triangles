@@ -14,7 +14,7 @@ Plane3::Plane3(const double A, const double B, const double C, const double D)
 }
 
 
-Plane3::Plane3(Point3 A, Point3 B, Point3 C)
+Plane3::Plane3(const Point3& A, const Point3& B, const Point3& C)
 {
     Math::Vector3 ab = B - A;
     Math::Vector3 ac = B - C;

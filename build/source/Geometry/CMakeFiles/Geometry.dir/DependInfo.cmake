@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/frukt71/Github/Triangles/source/Geometry/src/math/vector3.cpp" "source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o" "gcc" "source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o.d"
   "/home/frukt71/Github/Triangles/source/Geometry/src/math_engine/collision_handler.cpp" "source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o" "gcc" "source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o.d"
+  "/home/frukt71/Github/Triangles/source/Geometry/src/math_engine/collision_table.cpp" "source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o" "gcc" "source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o.d"
   "/home/frukt71/Github/Triangles/source/Geometry/src/primitives/dump_funcs.cpp" "source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o" "gcc" "source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o.d"
   "/home/frukt71/Github/Triangles/source/Geometry/src/primitives/primitives.cpp" "source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o" "gcc" "source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o.d"
   )

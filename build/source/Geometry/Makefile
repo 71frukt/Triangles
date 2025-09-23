@@ -188,6 +188,30 @@ src/math_engine/collision_handler.cpp.s:
 	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.s
 .PHONY : src/math_engine/collision_handler.cpp.s
 
+src/math_engine/collision_table.o: src/math_engine/collision_table.cpp.o
+.PHONY : src/math_engine/collision_table.o
+
+# target to build an object file
+src/math_engine/collision_table.cpp.o:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o
+.PHONY : src/math_engine/collision_table.cpp.o
+
+src/math_engine/collision_table.i: src/math_engine/collision_table.cpp.i
+.PHONY : src/math_engine/collision_table.i
+
+# target to preprocess a source file
+src/math_engine/collision_table.cpp.i:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.i
+.PHONY : src/math_engine/collision_table.cpp.i
+
+src/math_engine/collision_table.s: src/math_engine/collision_table.cpp.s
+.PHONY : src/math_engine/collision_table.s
+
+# target to generate assembly for a file
+src/math_engine/collision_table.cpp.s:
+	cd /home/frukt71/Github/Triangles/build && $(MAKE) $(MAKESILENT) -f source/Geometry/CMakeFiles/Geometry.dir/build.make source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.s
+.PHONY : src/math_engine/collision_table.cpp.s
+
 src/primitives/dump_funcs.o: src/primitives/dump_funcs.cpp.o
 .PHONY : src/primitives/dump_funcs.o
 
@@ -252,6 +276,9 @@ help:
 	@echo "... src/math_engine/collision_handler.o"
 	@echo "... src/math_engine/collision_handler.i"
 	@echo "... src/math_engine/collision_handler.s"
+	@echo "... src/math_engine/collision_table.o"
+	@echo "... src/math_engine/collision_table.i"
+	@echo "... src/math_engine/collision_table.s"
 	@echo "... src/primitives/dump_funcs.o"
 	@echo "... src/primitives/dump_funcs.i"
 	@echo "... src/primitives/dump_funcs.s"

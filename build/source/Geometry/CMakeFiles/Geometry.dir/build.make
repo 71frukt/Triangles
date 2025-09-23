@@ -97,10 +97,24 @@ source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.s:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.s"
 	cd /home/frukt71/Github/Triangles/build/source/Geometry && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/frukt71/Github/Triangles/source/Geometry/src/math_engine/collision_handler.cpp -o CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.s
 
+source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o: source/Geometry/CMakeFiles/Geometry.dir/flags.make
+source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o: ../source/Geometry/src/math_engine/collision_table.cpp
+source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o: source/Geometry/CMakeFiles/Geometry.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o"
+	cd /home/frukt71/Github/Triangles/build/source/Geometry && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o -MF CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o.d -o CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o -c /home/frukt71/Github/Triangles/source/Geometry/src/math_engine/collision_table.cpp
+
+source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.i"
+	cd /home/frukt71/Github/Triangles/build/source/Geometry && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/frukt71/Github/Triangles/source/Geometry/src/math_engine/collision_table.cpp > CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.i
+
+source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.s"
+	cd /home/frukt71/Github/Triangles/build/source/Geometry && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/frukt71/Github/Triangles/source/Geometry/src/math_engine/collision_table.cpp -o CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.s
+
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o: source/Geometry/CMakeFiles/Geometry.dir/flags.make
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o: ../source/Geometry/src/primitives/dump_funcs.cpp
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o: source/Geometry/CMakeFiles/Geometry.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o"
 	cd /home/frukt71/Github/Triangles/build/source/Geometry && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o -MF CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o.d -o CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o -c /home/frukt71/Github/Triangles/source/Geometry/src/primitives/dump_funcs.cpp
 
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.i: cmake_force
@@ -114,7 +128,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.s: cmake_f
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: source/Geometry/CMakeFiles/Geometry.dir/flags.make
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: ../source/Geometry/src/primitives/primitives.cpp
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o: source/Geometry/CMakeFiles/Geometry.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o"
 	cd /home/frukt71/Github/Triangles/build/source/Geometry && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o -MF CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o.d -o CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o -c /home/frukt71/Github/Triangles/source/Geometry/src/primitives/primitives.cpp
 
 source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.i: cmake_force
@@ -129,6 +143,7 @@ source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.s: cmake_f
 Geometry_OBJECTS = \
 "CMakeFiles/Geometry.dir/src/math/vector3.cpp.o" \
 "CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o" \
+"CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o" \
 "CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o" \
 "CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o"
 
@@ -137,11 +152,12 @@ Geometry_EXTERNAL_OBJECTS =
 
 source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/src/math/vector3.cpp.o
 source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_handler.cpp.o
+source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/src/math_engine/collision_table.cpp.o
 source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/src/primitives/dump_funcs.cpp.o
 source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/src/primitives/primitives.cpp.o
 source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/build.make
 source/Geometry/libGeometry.a: source/Geometry/CMakeFiles/Geometry.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX static library libGeometry.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/frukt71/Github/Triangles/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX static library libGeometry.a"
 	cd /home/frukt71/Github/Triangles/build/source/Geometry && $(CMAKE_COMMAND) -P CMakeFiles/Geometry.dir/cmake_clean_target.cmake
 	cd /home/frukt71/Github/Triangles/build/source/Geometry && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Geometry.dir/link.txt --verbose=$(VERBOSE)
 
