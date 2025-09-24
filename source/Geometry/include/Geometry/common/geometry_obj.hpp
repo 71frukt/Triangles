@@ -1,15 +1,21 @@
 #pragma once
 #include "RLogSU/logger.hpp"
 #include <memory>
+#include <typeinfo>
 
 namespace Geometry {
 
 enum ObjType
 {
+    // primitives
     POINT3,
     LINE3,
     PLANE3,
     
+    // shapes
+    LINESECT3,
+    TRIANGLE3,
+
     NOT_AN_OBJ,
 };
 
@@ -39,12 +45,12 @@ class GeomObj
 public:
     virtual ~GeomObj() = default;
 
-    [[nodiscard]] virtual ObjType WhoAmI() const = 0;
+    [[nodiscard]] virtual ObjType WhoAmI() const;
     
-    virtual void Assert()                                   const = 0;
-    virtual void Dump(const std::string& name = "some_obj") const = 0;
+    virtual void Assert()                                   const;
+    virtual void Dump(const std::string& name = "some_obj") const;
 
-private:
+protected:
 };
 
 using GeomObjUniqPtr = std::unique_ptr<GeomObj>;

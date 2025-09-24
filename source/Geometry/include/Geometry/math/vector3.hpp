@@ -28,15 +28,21 @@ public:
     [[nodiscard]] double GetLen () const { return std::sqrt(GetLen2()); }
 
 
-    [[nodiscard]] bool    operator== (  const Vector3& other ) const;
-    [[nodiscard]] bool    operator!= (  const Vector3& other ) const;
-    [[nodiscard]] Vector3 operator+  (  const Vector3& other ) const;
-    [[nodiscard]] Vector3 operator-  ()                        const;
-    [[nodiscard]] Vector3 operator-  (  const Vector3& other ) const;
-    [[nodiscard]] Vector3 operator*  (  const double   scalar) const;
-    [[nodiscard]] Vector3 operator/  (  const double   scalar) const;
-    [[nodiscard]] double  operator*  (  const Vector3& other ) const;     // скалярное
-    [[nodiscard]] Vector3 operator^  (  const Vector3& other ) const;     // векторное
+    [[nodiscard]] bool     operator== (const Vector3& other ) const;
+    [[nodiscard]] bool     operator!= (const Vector3& other ) const;
+    [[nodiscard]] Vector3  operator+  (const Vector3& other ) const;
+    [[nodiscard]] Vector3  operator-  ()                      const;
+    [[nodiscard]] Vector3  operator-  (const Vector3& other ) const;
+    [[nodiscard]] Vector3  operator*  (const double   scalar) const;
+    [[nodiscard]] Vector3  operator/  (const double   scalar) const;
+    [[nodiscard]] double   operator*  (const Vector3& other ) const;     // скалярное
+    [[nodiscard]] Vector3  operator^  (const Vector3& other ) const;     // векторное
+ 
+                  Vector3& operator+= (const Vector3& other ) { return *this = (*this + other ); }
+                  Vector3& operator-= (const Vector3& other ) { return *this = (*this - other ); }
+                  Vector3& operator*= (const double   scalar) { return *this = (*this * scalar); }
+                  Vector3& operator/= (const double   scalar) { return *this = (*this / scalar); }
+
 
     [[nodiscard]] Vector3 Normalized () const { return *this / GetLen(); }
                   Vector3 Normalize  ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}

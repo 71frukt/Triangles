@@ -3,30 +3,30 @@
 
 #include "Geometry/common/geometry_obj.hpp"
 #include "Geometry/math/double_handle.hpp"
+#include "Geometry/math/point3.hpp"
 #include "Geometry/math/vector3.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/math_engine/collision_handler.hpp"
 
 #include "RLogSU/error_handler.hpp"
+#include "RLogSU/logger.hpp"
 
 
 namespace Geometry::MathEngine {
 
 std::string CollisionCodeStr(CollisionCodeT code)
 {
-    std::string code_str;
+    switch (code) {
+    
+    case NOTHING: return "NOTHING";
+    case CROSS  : return "CROSS"  ;
+    case OVERLAP: return "OVERLAP";
+    case LIES_IN: return "LIES_IN";
+    case EQUAL  : return "EQUAL"  ;
 
-    if (code == EQUAL)     return      "EQUAL ";
-    if (code == LIES_IN)   return      "LIES_IN ";
-    if (code == COLLINEAR) return      "COLLINEAR "; 
-    if (code == NOTHING)   return      "NOTHING "; 
-    if (code == SKEW)      return      "SKEW";
+    default     : return "UNKNOWN";
 
-    if (code & CROSS)      code_str += "CROSS ";
-
-    if (code & PARALLEL)   code_str += "PARALLEL ";
-
-    return code_str;
+    }
 }
 
 
@@ -38,7 +38,7 @@ const CollisionCodeT PointPointInteractor::CollisionCode() const
         return EQUAL;
 
     else
-        return COLLINEAR;
+        return NOTHING;
 }
 
 const CollisionCodeT PointPlaneInteractor::CollisionCode() const
@@ -92,7 +92,7 @@ const CollisionCodeT LineLineInteractor::CollisionCode() const
     }
 
     else
-        return SKEW;
+        return NOTHING;
 }
 
 
@@ -107,18 +107,16 @@ const CollisionCodeT LinePlaneInteractor::CollisionCode() const
     const Primitives::Point3& line_origin      = line_.GetOrigin();
     // const Primitives::Point3& plane_origin     = plane_.GetOrigin();
 
-    int code = NOTHING;
-
-    if (Interact(line_origin, plane_)->CollisionCode() == LIES_IN)
-        code |= CROSS;
-    
     if (line_normd_dir.Normal(plane_normd_norm))
-        code |= PARALLEL;
+    {
+        if (Interact(line_origin, plane_)->CollisionCode() == LIES_IN)
+            return LIES_IN;
+        else
+            return NOTHING;
+    }
 
     else
-        code |= CROSS;
-
-    return CollisionCodeT(code);
+        return CROSS;
 }
 
 
@@ -130,22 +128,79 @@ const CollisionCodeT PlanePlaneInteractor::CollisionCode() const
     const Math::Vector3& plane1_normd_norm = plane1_.GetNormdNormality();
     const Math::Vector3& plane2_normd_norm = plane2_.GetNormdNormality();
 
-    int code = NOTHING;
-
     if (plane1_normd_norm.Collinear(plane2_normd_norm))
     {
-        code |= PARALLEL;
-
-        RLSU_ASSERT(plane1_normd_norm == plane2_normd_norm);
         if (Math::DoubleEq(plane1_.GetD(), plane2_.GetD()))
-            code = EQUAL;
+            return EQUAL;
+
+        else
+            return NOTHING;;
     }
 
     else 
-        code |= CROSS;
-
-    return CollisionCodeT(code);
+        return CROSS;
 }
+
+
+const CollisionCodeT PointLinesectInteractor::CollisionCode() const
+{
+    if (Interact(point_, linesect_.GetLine())->CollisionCode() == NOTHING)
+        return NOTHING;
+
+    // else if point lies on line
+    // linesect [A, B], point C
+    // if vector AC oppositely directed BC, point C lies on [A, B]
+
+    Primitives::Point3 C = Interact(point_, linesect_.GetLine())->Intersect();
+
+    Math::Vector3 AC = C - linesect_.GetPoint1();
+    Math::Vector3 BC = C - linesect_.GetPoint2();
+    Math::Vector3 AB = linesect_.GetPoint2() - linesect_.GetPoint1();
+
+
+    if ((AC + BC).GetLen2() <= AB.GetLen2())
+        return LIES_IN;
+}
+
+
+const CollisionCodeT LineLinesectInteractor::CollisionCode() const
+{
+    ASSERT_HANDLE(line_    .Assert());
+    ASSERT_HANDLE(linesect_.Assert());
+
+    auto mb_cross_point = Interact(line_, linesect_.GetLine())->Intersect();
+
+    return Interact(*mb_cross_point, linesect_)->CollisionCode();
+}
+
+
+const CollisionCodeT LinesectLinesectInteractor::CollisionCode() const
+{
+    ASSERT_HANDLE(linesect1_.Assert());
+    ASSERT_HANDLE(linesect2_.Assert());
+
+    auto mb1_cross_point = Interact(linesect1_.GetLine(), linesect2_)->Intersect();
+    return                                 Interact(*mb1_cross_point,     linesect1_)->CollisionCode();
+}
+
+
+const CollisionCodeT LineTriangleInteractor::CollisionCode() const
+{
+    ASSERT_HANDLE(line_    .Assert());
+    ASSERT_HANDLE(triangle_.Assert());
+
+    if (Interact(line_, triangle_.GetPlane())->CollisionCode() == LIES_IN)
+        return CROSS;
+
+    else
+    {
+        RLSU_WARNING("line is crossing triangle, We don't know how to count yet!");
+        return NOTHING;
+    }
+}
+
+
+
 // ==========/ COLLISION CODE ======================================================
 
 
@@ -194,17 +249,19 @@ double LineLineInteractor::Distance() const
     return hight;
 }
 
+
 double LinePlaneInteractor::Distance() const
 {
     ASSERT_HANDLE(line_ .Assert());
     ASSERT_HANDLE(plane_.Assert());
 
-    if (CollisionCode() == PARALLEL)
+    if (CollisionCode() == NOTHING)
         return Interact(line_.GetOrigin(), plane_)->Distance();
 
     else
         return 0;
 }
+
 
 double PlanePlaneInteractor::Distance() const
 {
@@ -222,6 +279,41 @@ double PlanePlaneInteractor::Distance() const
     // (A, B, C) is normalized vector
     return std::abs(plane1_.GetD() - plane2_.GetD());
 }
+
+
+double PointLinesectInteractor::Distance() const
+{
+    return Interact(point_, linesect_.GetLine())->Distance();
+}
+
+
+double LineLinesectInteractor::Distance() const
+{
+    ASSERT_HANDLE(linesect_.Assert());
+    ASSERT_HANDLE(line_    .Assert());
+
+    return Interact(linesect_.GetLine(), line_)->Distance();
+}
+
+
+double LinesectLinesectInteractor::Distance() const
+{
+    ASSERT_HANDLE(linesect1_.Assert());
+    ASSERT_HANDLE(linesect2_.Assert());
+
+    return Interact(linesect1_.GetLine(), linesect2_.GetLine())->Distance();
+}
+
+
+double LineTriangleInteractor::Distance() const
+{
+    ASSERT_HANDLE(line_    .Assert());
+    ASSERT_HANDLE(triangle_.Assert());
+
+    RLSU_WARNING("Trying to get distance(line, trangle) We don't know how to count yet!");
+    return 0;
+}
+
 // ==========/ DISTANCE ============================================================
 
 
@@ -331,7 +423,7 @@ GeomObjUniqPtr PlanePlaneInteractor::Intersect() const
     if (CollisionCode() == EQUAL)
         return std::make_unique<Primitives::Plane3>(plane1_);
 
-    if (CollisionCode() == PARALLEL)
+    if (CollisionCode() == NOTHING)
         return std::make_unique<NotAnObj>();
 
     // else if CROSS
@@ -351,6 +443,66 @@ GeomObjUniqPtr PlanePlaneInteractor::Intersect() const
 
     return std::make_unique<Primitives::Line3>(r0, v);
 }
+
+
+GeomObjUniqPtr PointLinesectInteractor::Intersect() const
+{
+    ASSERT_HANDLE(linesect_.Assert());
+
+    if (CollisionCode() == NOTHING)
+        return std::make_unique<NotAnObj>();
+
+    else
+        return std::make_unique<Primitives::Point3>(point_);
+}
+
+
+GeomObjUniqPtr LineLinesectInteractor::Intersect() const
+{
+    ASSERT_HANDLE(line_    .Assert());
+    ASSERT_HANDLE(linesect_.Assert());
+    
+    auto mb_cross_point = Interact(line_, linesect_.GetLine())->Intersect();
+
+    return Interact(*mb_cross_point, linesect_)->Intersect();
+}
+
+
+GeomObjUniqPtr LinesectLinesectInteractor::Intersect() const
+{
+    ASSERT_HANDLE(linesect1_.Assert());
+    ASSERT_HANDLE(linesect2_.Assert());
+
+    auto mb1_cross_point = Interact(linesect1_.GetLine(), linesect2_)->Intersect();
+    return                                 Interact(*mb1_cross_point,     linesect1_)->Intersect();
+}
+
+
+GeomObjUniqPtr LineTriangleInteractor::Intersect() const
+{
+    ASSERT_HANDLE(line_    .Assert());
+    ASSERT_HANDLE(triangle_.Assert());
+
+    // if (Interact(line_, triangle_.GetPlane())->CollisionCode() == LIES_IN)
+    // {
+
+    //     auto cross_point1 = Interact(line_, triangle_.GetLine1())->Intersect();
+    //     auto cross_point2 = Interact(line_, triangle_.GetLine2())->Intersect();
+    //     auto cross_point3 = Interact(line_, triangle_.GetLine3())->Intersect();
+
+    //     if (cross_point1 == cross_point2 || cross_point1 == cross_point3 || cross_point2 == cross_point3)
+    // }
+
+
+
+    // else
+    // {
+    //     RLSU_WARNING("Trying to intersect crossing triangle and line, We don't know how to count yet!");
+    //     return std::make_unique<NotAnObj>();
+    // }
+}
+
+
 // ==========/ INTERSECT ===========================================================
 
 

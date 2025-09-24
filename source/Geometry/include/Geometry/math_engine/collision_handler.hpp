@@ -3,8 +3,9 @@
 
 #include "Geometry/common/geometry_obj.hpp"
 #include "Geometry/primitives/primitives.hpp"
+#include "Geometry/shapes/shapes.hpp"
+
 #include <memory>
-#include <functional>
 
 
 namespace Geometry::MathEngine {
@@ -12,16 +13,12 @@ namespace Geometry::MathEngine {
 
 enum CollisionCodeT
 {  
-    NOTHING      = 0,
-    
-    ONE_TYPE     = 1 << 0,
-    CROSS        = 1 << 1,
-    PARALLEL     = 1 << 2,
+    NOTHING  = 0,
 
-    SKEW         = ONE_TYPE & ~PARALLEL & ~CROSS,
-    COLLINEAR    = ONE_TYPE |  PARALLEL,
-    LIES_IN      = CROSS    |  PARALLEL,
-    EQUAL        = LIES_IN  |  ONE_TYPE
+    CROSS    = 1,
+    OVERLAP  = 2,
+    LIES_IN  = 3,
+    EQUAL    = 4,
 };
 
 [[nodiscard]] std::string CollisionCodeStr(CollisionCodeT code);
@@ -135,6 +132,7 @@ private:
     const Primitives::Line3& line2_;
 };
 
+
 class LinePlaneInteractor : public Interactor
 {
 public:
@@ -143,7 +141,7 @@ public:
         , plane_(plane)
         {}
 
-    LinePlaneInteractor(const Primitives::Plane3& plane, const Primitives::Line3& line)
+    LinePlaneInteractor(const Primitives::Plane3& plane, const Primitives::Line3& line) // TODO: удалить перегрузку конструкторов за ненадобностью
         : line_ (line)
         , plane_(plane)
         {}
@@ -181,6 +179,90 @@ private:
     const Primitives::Plane3& plane2_;
 };
 
+
+class PointLinesectInteractor : public Interactor
+{
+public:
+    PointLinesectInteractor( const Primitives::Point3& point, const Shapes::Linesect3& linesect)
+        : point_   (point)
+        , linesect_(linesect)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return point_;    };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return linesect_; };
+
+private:
+    const Primitives::Point3& point_;
+    const Shapes::Linesect3 & linesect_;
+};
+
+
+class LineLinesectInteractor : public Interactor
+{
+public:
+    LineLinesectInteractor(const Primitives::Line3& line, const Shapes::Linesect3& linesect)
+        : line_    (line)
+        , linesect_(linesect)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line_;     };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return linesect_; };
+
+private:
+    const Primitives::Line3& line_;
+    const Shapes::Linesect3& linesect_;
+};
+
+
+class LinesectLinesectInteractor : public Interactor
+{
+public:
+    LinesectLinesectInteractor(const Shapes::Linesect3& linesect1, const Shapes::Linesect3& linesect2)
+        : linesect1_(linesect1)
+        , linesect2_(linesect2)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return linesect1_; };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return linesect2_; };
+
+private:
+    const Shapes::Linesect3& linesect1_;
+    const Shapes::Linesect3& linesect2_;
+};
+
+
+
+class LineTriangleInteractor : public Interactor
+{
+public:
+    LineTriangleInteractor(const Primitives::Line3& line, const Shapes::Triangle3& triangle)
+        : line_    (line)
+        , triangle_(triangle)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line_;     };
+    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return triangle_; };
+
+private:
+    const Primitives::Line3& line_;
+    const Shapes::Triangle3& triangle_;
+};
 
 
 
