@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <string>
 #include <memory>
 
@@ -8,6 +9,7 @@
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/math_engine/collision_handler.hpp"
 
+#include "Geometry/shapes/shapes.hpp"
 #include "RLogSU/error_handler.hpp"
 #include "RLogSU/logger.hpp"
 
@@ -179,8 +181,17 @@ const CollisionCodeT LinesectLinesectInteractor::CollisionCode() const
     ASSERT_HANDLE(linesect1_.Assert());
     ASSERT_HANDLE(linesect2_.Assert());
 
-    auto mb1_cross_point = Interact(linesect1_.GetLine(), linesect2_)->Intersect();
-    return                                 Interact(*mb1_cross_point,     linesect1_)->CollisionCode();
+    auto cross_obj = Interact(linesect1_.GetLine(), linesect2_)->Intersect();
+
+    if (cross_obj->WhoAmI() == POINT3) 
+        return CROSS;
+
+    else if (cross_obj->WhoAmI() == LINESECT3)
+        return OVERLAP;
+
+    else
+        return NOTHING;
+
 }
 
 
@@ -473,8 +484,63 @@ GeomObjUniqPtr LinesectLinesectInteractor::Intersect() const
     ASSERT_HANDLE(linesect1_.Assert());
     ASSERT_HANDLE(linesect2_.Assert());
 
-    auto mb1_cross_point = Interact(linesect1_.GetLine(), linesect2_)->Intersect();
-    return                                 Interact(*mb1_cross_point,     linesect1_)->Intersect();
+    auto cross_shape = Interact(linesect1_.GetLine(), linesect2_)->Intersect();
+
+    if (cross_shape->WhoAmI() == POINT3)
+        return Interact(*cross_shape, linesect1_)->Intersect();
+
+    else if (cross_shape->WhoAmI() == LINE3)
+    {
+        GeomObjUniqPtr mb_cross_points[4] = 
+        {
+            Interact(linesect1_.GetPoint1(), linesect2_)->Intersect(),
+            Interact(linesect1_.GetPoint2(), linesect2_)->Intersect(),
+            Interact(linesect2_.GetPoint1(), linesect1_)->Intersect(),
+            Interact(linesect2_.GetPoint2(), linesect1_)->Intersect(),
+        };
+
+        GeomObjUniqPtr cross_point1;
+        GeomObjUniqPtr cross_point2;
+
+        bool cross_point1_defined = false;
+        bool cross_point2_defined = false;
+
+        for (size_t i = 0; i < 4; i++)
+        {
+            if (mb_cross_points[i]->WhoAmI() == POINT3 && cross_point1_defined == false)
+            {
+                cross_point1_defined = true;
+                cross_point1 = std::move(mb_cross_points[i]);
+            }
+
+            else if (mb_cross_points[i]->WhoAmI() == POINT3 && cross_point2_defined == false)
+            {
+                cross_point2_defined = true;
+                cross_point2 = std::move(mb_cross_points[i]);
+            }
+
+            RLSU_ASSERT( !(mb_cross_points[i]->WhoAmI() == POINT3 && cross_point1_defined == false 
+                                                                  && cross_point2_defined == false));
+        }
+
+        if (cross_point1->WhoAmI() == NOT_AN_OBJ && cross_point1->WhoAmI() == NOT_AN_OBJ)
+            return std::make_unique<NotAnObj>();
+
+        else
+        {
+            RLSU_ASSERT(cross_point1->WhoAmI() == POINT3 && cross_point2->WhoAmI() == POINT3);
+
+            if (cross_point1 == cross_point2)
+                return std::make_unique<Primitives::Point3>(cross_point1);
+
+            else
+                return std::make_unique<Shapes::Linesect3>(cross_point1, cross_point2);
+        }
+    }
+
+    else
+        return std::make_unique<NotAnObj>();
+
 }
 
 
