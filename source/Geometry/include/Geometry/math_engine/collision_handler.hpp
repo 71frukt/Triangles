@@ -4,6 +4,8 @@
 #include "Geometry/common/geometry_obj.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/shapes/shapes.hpp"
+#include "RLogSU/error_handler.hpp"
+#include "RLogSU/logger.hpp"
 
 #include <memory>
 
@@ -31,11 +33,44 @@ public:
     [[nodiscard]] virtual        double         Distance     () const = 0;
     [[nodiscard]] virtual        GeomObjUniqPtr Intersect    () const = 0;
 
-    [[nodiscard]] virtual const  GeomObj&       GeyObj1      () const = 0;
-    [[nodiscard]] virtual const  GeomObj&       GeyObj2      () const = 0;
 };
 
 std::unique_ptr<Interactor> Interact(const GeomObj& obj1, const GeomObj& obj2);
+
+
+class NotImplementedInteractor : public Interactor
+{
+public:    
+    NotImplementedInteractor(const GeomObj& some_obj1, const GeomObj& some_obj2) 
+    {
+        RLSU_ASSERT(false, "called not-iplemented interactor!"); 
+    }
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final { return NOTHING; };
+    [[nodiscard]] virtual       double         Distance     () const override final { return 0; }
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final { return std::make_unique<NotAnObj>(); };
+
+private:
+};
+
+
+class NotAnObjInteractor : public Interactor
+{
+public:    
+    NotAnObjInteractor(const GeomObj& notanobj, const GeomObj& some_obj) {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final { return NOTHING; };
+
+    [[nodiscard]] virtual       double         Distance     () const override final 
+    {
+        RLSU_ERROR("Trying to get distance to not-an-obj"); 
+        return 0;
+    };
+
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final { return std::make_unique<NotAnObj>(); };
+
+private:
+};
 
 
 class PointPointInteractor : public Interactor
@@ -49,9 +84,6 @@ public:
     [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
-
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return point1_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return point2_; };
 
 private:
     const Primitives::Point3& point1_;
@@ -76,9 +108,6 @@ public:
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return point_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return plane_; };
-
 private:
     const Primitives::Point3& point_;
     const Primitives::Plane3& plane_;
@@ -102,9 +131,6 @@ public:
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return point_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return line_ ; };
-
 private:
     const Primitives::Point3& point_;
     const Primitives::Line3 & line_;
@@ -123,9 +149,6 @@ public:
     [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
-
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line1_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return line2_; };
 
 private:
     const Primitives::Line3& line1_;
@@ -150,9 +173,6 @@ public:
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return plane_; };
-
 private:
     const Primitives::Line3 & line_;
     const Primitives::Plane3& plane_;
@@ -170,9 +190,6 @@ public:
     [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
-
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return plane1_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return plane2_; };
 
 private:
     const Primitives::Plane3& plane1_;
@@ -192,9 +209,6 @@ public:
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return point_;    };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return linesect_; };
-
 private:
     const Primitives::Point3& point_;
     const Shapes::Linesect3 & linesect_;
@@ -212,9 +226,6 @@ public:
     [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
-
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line_;     };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return linesect_; };
 
 private:
     const Primitives::Line3& line_;
@@ -234,14 +245,10 @@ public:
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return linesect1_; };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return linesect2_; };
-
 private:
     const Shapes::Linesect3& linesect1_;
     const Shapes::Linesect3& linesect2_;
 };
-
 
 
 class LineTriangleInteractor : public Interactor
@@ -256,14 +263,32 @@ public:
     [[nodiscard]] virtual       double         Distance     () const override final;
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
 
-    [[nodiscard]] virtual const GeomObj&       GeyObj1      () const override final { return line_;     };
-    [[nodiscard]] virtual const GeomObj&       GeyObj2      () const override final { return triangle_; };
-
 private:
     const Primitives::Line3& line_;
     const Shapes::Triangle3& triangle_;
 };
 
+
+class TriangleTriangleInteractor : public Interactor
+{
+public:
+    TriangleTriangleInteractor(const Shapes::Triangle3& triangle1, const Shapes::Triangle3& triangle2)
+        : triangle1_(triangle1)
+        , triangle2_(triangle2)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final { return 0; };
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final { return std::make_unique<NotAnObj>(); };
+
+private:
+    const Shapes::Triangle3& triangle1_;
+    const Shapes::Triangle3& triangle2_;
+
+    [[nodiscard]] const CollisionCodeT EqualPlaneCollisionCode_() const;
+    [[nodiscard]] const CollisionCodeT CrossPlaneCollisionCode_() const;
+    [[nodiscard]] const CollisionCodeT CollisionCodeAlongLine_ (const Primitives::Line3& line) const;
+};
 
 
 }

@@ -1,6 +1,9 @@
 
+#include "Geometry/math/vector3.hpp"
 #include "Geometry/math_engine/collision_handler.hpp"
 #include "Geometry/primitives/primitives.hpp"
+#include "Geometry/shapes/shapes.hpp"
+#include "RLogSU/error_handler.hpp"
 #include "RLogSU/logger.hpp"
 
 
@@ -8,37 +11,41 @@ int main()
 {
     RLSU_INFO("START");
 
-    // Geometry::Primitives::Point3 point1(0, 0, 9);
-    // Geometry::Primitives::Point3 point2(1, 1, 1);
+    try {        
 
-    // Geometry::Primitives::Line3 line1({1, 0, 0}, {1, 0, 0});
-    // Geometry::Primitives::Line3 line2({1, 0, 0}, {1, 0, 0});
+        Geometry::Shapes::Triangle3 tr1({0, 0,  1}, 
+                                        {10, 0, 1}, 
+                                        {0, 10, 1});
+        
+        Geometry::Shapes::Triangle3 tr2({0, 0, 1}, 
+                                        {1, 0, 1}, 
+                                        {0, 1, 1});
+        
+        Geometry::Primitives::Line3 line({0.5, 0, 0}, Geometry::Primitives::Point3{0.5, 1, 0});
 
-    // auto interactor = Geometry::MathEngine::Interact(line1, line2);
-    // auto fig1 = interactor->Intersect();
+        tr1.Dump("tr1");
+        tr2.Dump("tr2!");
 
-    // RLSU_INFO("inter1 = {}", Geometry::MathEngine::CollisionCodeStr(interactor->CollisionCode()));
-    // RLSU_INFO("dist1  = {}", interactor->Distance());
-
-    // RLSU_DUMP(fig1->Dump("fig1"));
-    
-    // auto fig2 = Geometry::MathEngine::Interact(*fig1, point1)->Intersect();
-    // RLSU_DUMP(fig2->Dump("fig2"));
-
-
-    Geometry::Primitives::Plane3 plane1(0, 0, 1, 3);
-    Geometry::Primitives::Plane3 plane2(0, 1, 1, 3);
-
-    auto interactor = Geometry::MathEngine::Interact(plane1, plane2);
-    auto fig1 = interactor->Intersect();
-
-    RLSU_INFO("inter1 = {}", Geometry::MathEngine::CollisionCodeStr(interactor->CollisionCode()));
-    RLSU_INFO("dist1  = {}", interactor->Distance());
-
-    plane1.Dump("plane1");
-    plane2.Dump("plane2");
-    
-    fig1->Dump("plane x plane");
+        auto interactor = Geometry::MathEngine::Interact(tr1, tr2);
+        auto fig1 = interactor->Intersect();
+        
+        RLSU_INFO("inter1 = {}", Geometry::MathEngine::CollisionCodeStr(interactor->CollisionCode()));
+        // RLSU_INFO("dist1  = {}", interactor->Distance());
+        
+        // Geometry::Shapes::Linesect3 ls1({0, 0, 0}, Geometry::Primitives::Point3(0, 1, 0));
+        // Geometry::Shapes::Linesect3 ls2({0, 0, 0}, Geometry::Primitives::Point3(0, 2, 0));
+        // auto interactor = Geometry::MathEngine::Interact(ls1, ls2);
+        // auto fig1 = interactor->Intersect();
+        
+        // RLSU_INFO("inter1 = {}", Geometry::MathEngine::CollisionCodeStr(interactor->CollisionCode()));
+        // RLSU_INFO("dist1  = {}", interactor->Distance());
+        
+        // fig1->Dump("ls x ls");
+    }
+    catch (const std::runtime_error& _e) {
+        RLSU_ERROR("what(): {}", _e.what());
+        throw;
+    }  
 
     RLSU_INFO("END");
 }

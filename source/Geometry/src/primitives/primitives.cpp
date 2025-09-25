@@ -16,8 +16,9 @@ Geometry::Math::Point3 Point3::CastFromGeomObj_(const GeomObjUniqPtr& game_obj)
     RLSU_ASSERT(point_ptr);
 
     return *point_ptr;
-}
 
+    ERROR_HANDLE(Assert());
+}
 
 Line3 Line3::CastFromGeomObj_(const GeomObjUniqPtr& game_obj)
 {
@@ -47,6 +48,8 @@ Plane3::Plane3(const Math::Vector3& normality_, const double D)
         positive_D_      *= -1;
         normd_normality_ *= -1;
     }
+
+    ERROR_HANDLE(Assert());
 }
 
 Plane3::Plane3(const double A, const double B, const double C, const double D)
@@ -55,6 +58,14 @@ Plane3::Plane3(const double A, const double B, const double C, const double D)
 
     normd_normality_ = normality.Normalized();
     positive_D_ = D / normality.GetLen();
+
+    if (!Math::DoublePositive(D))
+    {
+        positive_D_      *= -1;
+        normd_normality_ *= -1;
+    }
+
+    ERROR_HANDLE(Assert());
 }
 
 Plane3::Plane3(const Point3& A, const Point3& B, const Point3& C)
@@ -67,9 +78,28 @@ Plane3::Plane3(const Point3& A, const Point3& B, const Point3& C)
     Math::Vector3 rad_vec_0(A);
     positive_D_ = -(rad_vec_0 * normd_normality_);
 
+    if (!Math::DoublePositive(positive_D_))
+    {
+        positive_D_      *= -1;
+        normd_normality_ *= -1;
+    }
+
     RLSU_ASSERT(MathEngine::Interact(A, *this)->CollisionCode() == MathEngine::LIES_IN);
     RLSU_ASSERT(MathEngine::Interact(B, *this)->CollisionCode() == MathEngine::LIES_IN);
     RLSU_ASSERT(MathEngine::Interact(C, *this)->CollisionCode() == MathEngine::LIES_IN);
+
+    ERROR_HANDLE(Assert());
 }
+
+bool Plane3::operator== (const Plane3& other ) const
+{
+    if (Math::DoubleZero(this->GetD()) && Math::DoubleZero(other.GetD()))
+        return (this->normd_normality_.Collinear(other.normd_normality_));
+
+    else
+        return (this->normd_normality_ == other.normd_normality_
+             && Math::DoubleEq(other.GetD(), this->GetD()));
+}
+
 
 }

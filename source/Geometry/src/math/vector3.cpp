@@ -1,4 +1,5 @@
 #include "Geometry/math/vector3.hpp"
+#include "Geometry/math/double_handle.hpp"
 #include "Geometry/math/point3.hpp"
 
 #include "RLogSU/logger.hpp"
@@ -12,7 +13,7 @@ Vector3::Vector3(const Point3& point) : x_(point.GetX()), y_(point.GetY()), z_(p
 
 bool Vector3::operator== (const Vector3& other) const  
 {
-    return this->x_ == other.x_ && this->y_ == other.y_ && this->z_ == other.z_;
+    return DoubleEq(this->x_, other.x_) && DoubleEq(this->y_, other.y_) && DoubleEq(this->z_, other.z_);
 }
 
 bool Vector3::operator!= (const Vector3& other) const  
@@ -54,7 +55,7 @@ double Vector3::operator* (const Vector3& other) const         // скалярн
 Vector3 Vector3::operator^ (const Vector3& other) const         // векторное умножение 
 {
     double new_x = this->y_ * other.z_ - this->z_ * other.y_;
-    double new_y = this->x_ * other.z_ - this->z_ * other.x_;
+    double new_y = this->z_ * other.x_ - this->x_ * other.z_;
     double new_z = this->x_ * other.y_ - this->y_ * other.x_;
 
     return Vector3(new_x, new_y, new_z);

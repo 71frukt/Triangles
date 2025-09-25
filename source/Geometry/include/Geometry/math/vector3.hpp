@@ -2,6 +2,7 @@
 
 #include <cmath>
 
+#include "RLogSU/error_handler.hpp"
 #include "RLogSU/logger.hpp"
 
 #include "Geometry/math/double_handle.hpp"
@@ -16,9 +17,9 @@ class Point3;
 class Vector3
 {
 public:
-    Vector3() = default;
     Vector3(const double x, const double y, const double z) : x_(x), y_(y), z_(z) {};
     Vector3(const Point3& point);
+    Vector3() : x_(1), y_(0), z_(0) { }
 
     [[nodiscard]] double GetX   () const { return x_; }
     [[nodiscard]] double GetY   () const { return y_; }
@@ -44,7 +45,7 @@ public:
                   Vector3& operator/= (const double   scalar) { return *this = (*this / scalar); }
 
 
-    [[nodiscard]] Vector3 Normalized () const { return *this / GetLen(); }
+    [[nodiscard]] Vector3 Normalized () const { RLSU_ASSERT(!this->IsZero()); return *this / GetLen(); }
                   Vector3 Normalize  ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}
 
     [[nodiscard]] bool    IsZero     () const { return (DoubleZero(x_)) && DoubleZero(y_) && DoubleZero(z_); }
