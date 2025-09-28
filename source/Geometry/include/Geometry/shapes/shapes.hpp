@@ -22,7 +22,9 @@ public:
         : point1_(point1)
         , point2_(point2)
         , line_  (ERROR_HANDLE(Primitives::Line3(point1, point2)))
-    { }
+    { 
+        RLSU_VERIFY(point1 != point2);
+    }
 
     Linesect3() = default;
 

@@ -33,6 +33,8 @@ void Triangle3::Assert() const
     ASSERT_HANDLE(side3_.Assert());
     ASSERT_HANDLE(plane_.Assert());
 
+    RLSU_ASSERT(point1_ != point2_ && point1_ != point3_ && point2_ != point3_);
+
     RLSU_ASSERT(MathEngine::Interact(point1_, side1_)->CollisionCode() == MathEngine::LIES_IN);
     RLSU_ASSERT(MathEngine::Interact(point1_, side3_)->CollisionCode() == MathEngine::LIES_IN);
     
@@ -49,17 +51,21 @@ Triangle3::Triangle3(const Primitives::Point3& point1, const Primitives::Point3&
     , point2_(point2)
     , point3_(point3)
 
-    , side1_ (ASSERT_HANDLE(Linesect3(point1, point2)))
-    , side2_ (ASSERT_HANDLE(Linesect3(point2, point3)))
-    , side3_ (ASSERT_HANDLE(Linesect3(point3, point1)))
+    , side1_ (ERROR_HANDLE(Linesect3(point1, point2)))
+    , side2_ (ERROR_HANDLE(Linesect3(point2, point3)))
+    , side3_ (ERROR_HANDLE(Linesect3(point3, point1)))
 
     , plane_(point1, point2, point3)
-{ }
+{ 
+    ASSERT_HANDLE(Assert());
+
+    RLSU_VERIFY(point1 != point2 && point1 != point3 && point2 != point3);
+}
 
 Triangle3::Triangle3(const Primitives::Line3& line1 , const Primitives::Line3& line2 , const Primitives::Line3& line3 )
-    : point1_(MathEngine::Interact(line3, line1)->Intersect())
-    , point2_(MathEngine::Interact(line1, line2)->Intersect())
-    , point3_(MathEngine::Interact(line2, line3)->Intersect())
+    : point1_(ERROR_HANDLE(MathEngine::Interact(line3, line1)->Intersect()))
+    , point2_(ERROR_HANDLE(MathEngine::Interact(line1, line2)->Intersect()))
+    , point3_(ERROR_HANDLE(MathEngine::Interact(line2, line3)->Intersect()))
 
     , side1_ (point1_, point2_)
     , side2_ (point2_, point3_)
@@ -67,7 +73,9 @@ Triangle3::Triangle3(const Primitives::Line3& line1 , const Primitives::Line3& l
 
     , plane_(point1_, point2_, point3_)
 { 
-    ERROR_HANDLE(Assert());
+    ASSERT_HANDLE(Assert());
+
+    RLSU_VERIFY(side1_  != side2_  && side1_  != side3_  && side2_  != side3_);
 }
 
 }

@@ -45,8 +45,8 @@ public:
                   Vector3& operator/= (const double   scalar) { return *this = (*this / scalar); }
 
 
-    [[nodiscard]] Vector3 Normalized () const { RLSU_ASSERT(!this->IsZero()); return *this / GetLen(); }
-                  Vector3 Normalize  ()       { double scale = GetLen(); x_ /= scale; y_ /= scale; z_ /= scale; return *this;}
+    [[nodiscard]] Vector3 Normalized () const;
+                  Vector3 Normalize  ();
 
     [[nodiscard]] bool    IsZero     () const { return (DoubleZero(x_)) && DoubleZero(y_) && DoubleZero(z_); }
 
@@ -54,19 +54,7 @@ public:
     
     [[nodiscard]] bool    Normal     (const Vector3& other) const { return DoubleZero(*this * other); }
 
-
-    void Dump(const std::string& name = "some_vector") const
-    {
-        RLSU_LOG("\n");
-        RLSU_LOG("'{}' [{}] {{\n", name, static_cast<const void*>(this));
-        RLSU_BASETAB_INCREACE;
-
-        RLSU_LOG("({:.2g}, {:.2g}, {:.2g})\n", GetX(), GetY(), GetZ());
-        RLSU_LOG("length = {:.2g}\n", GetLen());
-        
-        RLSU_BASETAB_DECREACE;
-        RLSU_LOG("}}\n");
-    }
+    void Dump(const std::string& name = "some_vector") const;
 
 private:
     double x_ = 0;

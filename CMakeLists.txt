@@ -2,12 +2,10 @@ cmake_minimum_required(VERSION 3.17)
 
 project(Triangles LANGUAGES CXX)
 
+find_package(GTest REQUIRED)
+include_directories(${GTEST_INCLUDE_DIRS})
 enable_testing()
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
-    --force-new-ctest-process
-    --verbose
-    --output-on-failure
-)
+
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -24,13 +22,18 @@ add_subdirectory(source/Geometry)
 
 
 add_executable(${PROJECT_NAME}
-    source/main.cpp
+    source/gtest_triangles.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
     RLogSU
     Geometry
+
+    GTest::gtest
+    GTest::gtest_main
 )
+
+
 
 add_custom_target(run
     COMMAND ${CMAKE_BINARY_DIR}/${PROJECT_NAME}

@@ -45,7 +45,7 @@ public:
 
     Line3(const Point3& point1, const Point3& point2) : origin_(point1)
     {
-        RLSU_ASSERT(point1 != point2);            
+        RLSU_VERIFY(point1 != point2);            
         normd_dir_ = (point2 - point1).Normalized();
     }
 

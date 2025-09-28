@@ -231,6 +231,9 @@ const CollisionCodeT LineTriangleInteractor::CollisionCode() const
             return CROSS;
         }
 
+        else
+            return NOTHING;
+
     }
 
     // else
@@ -299,21 +302,10 @@ const CollisionCodeT TriangleTriangleInteractor::CollisionCodeAlongLine_(const P
 {
     ASSERT_HANDLE(line.Assert());
 
-    RLSU_WARNING("in collalong");
-
-    line.Dump("line");
-
     auto cross_obj1 = ERROR_HANDLE(Interact(triangle1_, line)->Intersect());
-    RLSU_INFO("after cross_obj1");
     auto cross_obj2 = ERROR_HANDLE(Interact(triangle2_, line)->Intersect());
-    RLSU_INFO("after cross_obj2");
-
-    cross_obj1->Dump("cr1");
-    cross_obj2->Dump("cr2");
 
     CollisionCodeT collcode = ERROR_HANDLE(Interact(*cross_obj1, *cross_obj2)->CollisionCode());
-
-    ERROR_HANDLE(Interact(*cross_obj1, *cross_obj2)->Intersect()->Dump("crossobj"));
 
     if (collcode == NOTHING)
         return NOTHING;
@@ -685,7 +677,6 @@ GeomObjUniqPtr LineTriangleInteractor::Intersect() const
 {
     ASSERT_HANDLE(line_    .Assert());
     ASSERT_HANDLE(triangle_.Assert());
-    RLSU_ERROR("IN PoTrInt");
 
     if (CollisionCode() == NOTHING)
         return ERROR_HANDLE(std::make_unique<NotAnObj>());

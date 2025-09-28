@@ -43,7 +43,7 @@ Vector3 Vector3::operator* (double scalar) const
 
 Vector3 Vector3::operator/ (double scalar) const 
 {
-    RLSU_VERIFY(scalar != 0);
+    RLSU_ASSERT(scalar != 0);
     return Vector3(x_ / scalar, y_ / scalar, z_ / scalar);
 }
 
@@ -59,6 +59,44 @@ Vector3 Vector3::operator^ (const Vector3& other) const         // вектор�
     double new_z = this->x_ * other.y_ - this->y_ * other.x_;
 
     return Vector3(new_x, new_y, new_z);
+}
+
+
+Vector3 Vector3::Normalized () const
+{
+    if (IsZero())
+        return *this;
+    else
+        return *this / GetLen();
+}
+
+Vector3 Vector3::Normalize()
+{
+    double scale = GetLen();
+
+    if (scale == 0)
+        return *this;
+    
+    else
+    {
+        x_ /= scale;    
+        y_ /= scale;
+        z_ /= scale;
+        return *this;
+    }
+}
+
+void Vector3::Dump(const std::string& name) const
+{
+    RLSU_LOG("\n");
+    RLSU_LOG("'{}' [{}] {{\n", name, static_cast<const void*>(this));
+    RLSU_BASETAB_INCREACE;
+
+    RLSU_LOG("({:.2g}, {:.2g}, {:.2g})\n", GetX(), GetY(), GetZ());
+    RLSU_LOG("length = {:.2g}\n", GetLen());
+    
+    RLSU_BASETAB_DECREACE;
+    RLSU_LOG("}}\n");
 }
 
 

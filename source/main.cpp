@@ -13,13 +13,15 @@ int main()
 
     try {        
 
-        Geometry::Shapes::Triangle3 tr1({0, 0,  1}, 
+        Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+            Geometry::Shapes::Triangle3({0, 0,  1}, 
                                         {10, 0, 1}, 
-                                        {0, 10, 1});
+                                        {0, 10, 1}));
         
-        Geometry::Shapes::Triangle3 tr2({0, 0, 1}, 
-                                        {1, 0, 1}, 
-                                        {0, 1, 1});
+        Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+            Geometry::Shapes::Triangle3({0, 0,  1}, 
+                                        {10, 0, 1}, 
+                                        {0, 10, 1}));
         
         Geometry::Primitives::Line3 line({0.5, 0, 0}, Geometry::Primitives::Point3{0.5, 1, 0});
 
