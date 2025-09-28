@@ -42,7 +42,7 @@ TEST(TrianglesTest_one_plane, 2)
 }
 
 
-TEST(TrianglesTest_one_plane, 3)  // one side matches
+TEST(TrianglesTest_one_plane, 3a)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -61,7 +61,7 @@ TEST(TrianglesTest_one_plane, 3)  // one side matches
 }
 
 
-TEST(TrianglesTest_one_plane, 4)
+TEST(TrianglesTest_one_plane, 3b)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -80,7 +80,7 @@ TEST(TrianglesTest_one_plane, 4)
 }
 
 
-TEST(TrianglesTest_one_plane, 5)
+TEST(TrianglesTest_one_plane, 3c)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -99,7 +99,7 @@ TEST(TrianglesTest_one_plane, 5)
 }
 
 
-TEST(TrianglesTest_one_plane, 6)
+TEST(TrianglesTest_one_plane, 3d)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -118,7 +118,7 @@ TEST(TrianglesTest_one_plane, 6)
 }
 
 
-TEST(TrianglesTest_one_plane, 7)
+TEST(TrianglesTest_one_plane, 3f)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -137,7 +137,26 @@ TEST(TrianglesTest_one_plane, 7)
 }
 
 
-TEST(TrianglesTest_one_plane, 8)
+TEST(TrianglesTest_one_plane, 3x)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {10, 0,  0}, 
+                                    {0,  10, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({-5,  0,   0}, 
+                                    {-15, 0,   0}, 
+                                    {0,   -10, 0}));
+    
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_one_plane, 4a)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -156,7 +175,7 @@ TEST(TrianglesTest_one_plane, 8)
 }
 
 
-TEST(TrianglesTest_one_plane, 9)
+TEST(TrianglesTest_one_plane, 4b)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -175,7 +194,7 @@ TEST(TrianglesTest_one_plane, 9)
 }
 
 
-TEST(TrianglesTest_one_plane, 10)
+TEST(TrianglesTest_one_plane, 4c)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -194,7 +213,25 @@ TEST(TrianglesTest_one_plane, 10)
 }
 
 
-TEST(TrianglesTest_one_plane, 11)
+TEST(TrianglesTest_one_plane, 5a)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {10, 0,  0}, 
+                                    {0,  10, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0, 0,  0}, 
+                                    {10, 5,  0}, 
+                                    {0,  16, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::OVERLAP);
+}
+
+TEST(TrianglesTest_one_plane, 5b)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -213,7 +250,7 @@ TEST(TrianglesTest_one_plane, 11)
 }
 
 
-TEST(TrianglesTest_one_plane, 12)
+TEST(TrianglesTest_one_plane, 5c)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -232,7 +269,7 @@ TEST(TrianglesTest_one_plane, 12)
 }
 
 
-TEST(TrianglesTest_one_plane, 13)
+TEST(TrianglesTest_one_plane, 5d)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -251,7 +288,7 @@ TEST(TrianglesTest_one_plane, 13)
 }
 
 
-TEST(TrianglesTest_one_plane, 14)
+TEST(TrianglesTest_one_plane, 6a)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -269,6 +306,24 @@ TEST(TrianglesTest_one_plane, 14)
     EXPECT_EQ(collision_code, Geometry::MathEngine::OVERLAP);
 }
 
+
+TEST(TrianglesTest_one_plane, 6x)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {10, 0,  0}, 
+                                    {0,  10, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({6,  6,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
 
 
 TEST(TrianglesTest_parallel_planes, 1)
@@ -291,7 +346,7 @@ TEST(TrianglesTest_parallel_planes, 1)
 
 
 
-TEST(TrianglesTest_cross_planes, 1)
+TEST(TrianglesTest_cross_planes, 1a)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -310,7 +365,7 @@ TEST(TrianglesTest_cross_planes, 1)
 }
 
 
-TEST(TrianglesTest_cross_planes, 2)
+TEST(TrianglesTest_cross_planes, 1b)
 {
     Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
         Geometry::Shapes::Triangle3({0,  0,  0}, 
@@ -326,4 +381,384 @@ TEST(TrianglesTest_cross_planes, 2)
     auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
 
     EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 1c)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0, 10}, 
+                                    {15, 0, 0}, 
+                                    {0,  0, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 1d)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {15,  0, 0}, 
+                                    {-5,  0, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 1f)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  0, 0}, 
+                                    {-5,  0, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 1g)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {18,  0, 0}, 
+                                    {-5,  0, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 1xa)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  0, 10}, 
+                                    {-5,  0, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_cross_planes, 1xb)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {-15, 0, 0}, 
+                                    {-5,  0, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_cross_planes, 2a)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {18,  0, 0}, 
+                                    {0,   5, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 2b)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  5, 0}, 
+                                    {0,   5, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 2c)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  5, -5}, 
+                                    {0,   5, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 2d)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  0, -5}, 
+                                    {0,   5, -5}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 2f)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  2, -5}, 
+                                    {2,   5, -5}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 2g)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {10,  2, -5}, 
+                                    {-10, 5, -5}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3a)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,  10}, 
+                                    {10,  -5, -5}, 
+                                    {-10, 5,  -5}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3b)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,  10}, 
+                                    {10,  -5, 0}, 
+                                    {-10, 5,  0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3c)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,  10}, 
+                                    {-5,  -5, 0}, 
+                                    {10, 10,  0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3d)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0, 10}, 
+                                    {2,   2, 0}, 
+                                    {10, 10, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3xa)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,   10}, 
+                                    {-2,  -2,  0}, 
+                                    {-10, -10, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3xb)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,   10}, 
+                                    {-5,  0,   0}, 
+                                    {-10, -10, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3xc)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,   10}, 
+                                    {-10, 0,   0}, 
+                                    { 0,  -10, 0}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_cross_planes, 3xd)
+{
+    Geometry::Shapes::Triangle3 tr1 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,  0,  0}, 
+                                    {15, 0,  0}, 
+                                    {0,  15, 0}));
+    
+    Geometry::Shapes::Triangle3 tr2 = ERROR_HANDLE(
+        Geometry::Shapes::Triangle3({0,   0,   10}, 
+                                    {-10, 5,   -5}, 
+                                    { 5,  -10, -5}));
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(tr1, tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
 }

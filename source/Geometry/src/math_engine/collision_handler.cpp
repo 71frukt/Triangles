@@ -196,7 +196,7 @@ const CollisionCodeT LinesectLinesectInteractor::CollisionCode() const
     ASSERT_HANDLE(linesect1_.Assert());
     ASSERT_HANDLE(linesect2_.Assert());
 
-    auto cross_obj = ERROR_HANDLE(Interact(linesect1_.GetLine(), linesect2_)->Intersect());
+    auto cross_obj = ERROR_HANDLE(Interact(linesect1_, linesect2_)->Intersect());
 
     if (cross_obj->WhoAmI() == POINT3) 
         return CROSS;
@@ -281,10 +281,6 @@ const CollisionCodeT TriangleTriangleInteractor::EqualPlaneCollisionCode_() cons
 const CollisionCodeT TriangleTriangleInteractor::CrossPlaneCollisionCode_() const
 {
     auto cross_line = ERROR_HANDLE(Interact(triangle1_.GetPlane(), triangle2_.GetPlane())->Intersect());
-
-    // triangle1_.GetPlane().Dump("pl1");
-    // triangle2_.GetPlane().Dump("pl2");
-    // cross_line->Dump("cross_line");
 
     RLSU_ASSERT(cross_line->WhoAmI() == LINE3);
 
@@ -597,9 +593,8 @@ GeomObjUniqPtr LinesectLinesectInteractor::Intersect() const
     ASSERT_HANDLE(linesect1_.Assert());
     ASSERT_HANDLE(linesect2_.Assert());
 
-    
     auto cross_shape = ERROR_HANDLE(Interact(linesect1_.GetLine(), linesect2_)->Intersect());
-
+    
     if (cross_shape->WhoAmI() == POINT3)
         return ERROR_HANDLE(Interact(*cross_shape, linesect1_)->Intersect());
 
@@ -649,12 +644,12 @@ GeomObjUniqPtr LinesectLinesectInteractor::Intersect() const
             }
         }
 
-        if ((*cross_point1)->WhoAmI() == NOT_AN_OBJ && (*cross_point1)->WhoAmI() == NOT_AN_OBJ)
+        if (!cross_point1_defined && !cross_point2_defined)
             return ERROR_HANDLE(std::make_unique<NotAnObj>());
 
         else
         {
-            RLSU_ASSERT((*cross_point1)->WhoAmI() == POINT3 && (*cross_point2)->WhoAmI() == POINT3);
+            RLSU_ASSERT(cross_point1_defined && cross_point2_defined);
 
             if (*dynamic_cast<Primitives::Point3*>(cross_point1->get())
             == (*dynamic_cast<Primitives::Point3*>(cross_point2->get())))
