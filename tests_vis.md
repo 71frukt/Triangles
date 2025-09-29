@@ -392,3 +392,34 @@
 
   <em>Expected: nothing</em>
 </div>
+
+
+## Degenerate cases
+
+<div>
+  <img src="tests_vis/TrianglesTest_degenerate_3b.png" alt="3s" width="50%">
+  <br>
+  <em>Test 3b: TrianglesTest_degenerate_3c.3b</em>
+
+  <em>Expected: cross</em>
+</div>
+
+  <br>
+
+<div>
+  <img src="tests_vis/TrianglesTest_degenerate_3c.png" alt="3s" width="50%">
+  <br>
+  <em>Test 3c: TrianglesTest_cross_planes.3c</em>
+
+  <em>Expected: cross</em>
+</div>
+
+  <br>
+
+<div>
+  <img src="tests_vis/TrianglesTest_degenerate_3d.png" alt="3s" width="50%">
+  <br>
+  <em>Test 3d: TrianglesTest_degenerate_3c.3d</em>
+
+  <em>Expected: cross</em>
+</div>

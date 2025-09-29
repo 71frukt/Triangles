@@ -55,15 +55,21 @@ public:
     Triangle3(const Primitives::Point3& point1, const Primitives::Point3& point2, const Primitives::Point3& point3);
     Triangle3(const Primitives::Line3 & line1 , const Primitives::Line3 & line2 , const Primitives::Line3 & line3 );
 
+    [[nodiscard]] static GeomObjUniqPtr BuildGeomObj(const Primitives::Point3& point1, const Primitives::Point3& point2, const Primitives::Point3& point3);
+
     [[nodiscard]] virtual ObjType WhoAmI() const override final { return ObjType::TRIANGLE3; };
 
     virtual void Assert() const override;
 
     [[nodiscard]] const Primitives::Plane3& GetPlane() const { return plane_; }
 
-    [[nodiscard]] const          Linesect3& GetSide1() const { return side1_; }
-    [[nodiscard]] const          Linesect3& GetSide2() const { return side2_; }
-    [[nodiscard]] const          Linesect3& GetSide3() const { return side3_; }
+    [[nodiscard]] const Primitives::Point3& GetPoint1() const { return point1_; }
+    [[nodiscard]] const Primitives::Point3& GetPoint2() const { return point2_; }
+    [[nodiscard]] const Primitives::Point3& GetPoint3() const { return point3_; }
+
+    [[nodiscard]] const          Linesect3& GetSide1 () const { return side1_; }
+    [[nodiscard]] const          Linesect3& GetSide2 () const { return side2_; }
+    [[nodiscard]] const          Linesect3& GetSide3 () const { return side3_; }
 
 private:
     Primitives::Point3 point1_;

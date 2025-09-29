@@ -74,7 +74,9 @@ protected:
     virtual void DumpDetails() const = 0;
 };
 
+
 using GeomObjUniqPtr = std::unique_ptr<GeomObj>;
+
 
 class NotAnObj : public GeomObj
 {
@@ -85,5 +87,6 @@ public:
     
     virtual void DumpDetails() const override final {};
 };
+
 
 }

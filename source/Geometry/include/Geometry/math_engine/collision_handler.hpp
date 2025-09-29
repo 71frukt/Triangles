@@ -43,10 +43,11 @@ class NotImplementedInteractor : public Interactor
 public:    
     NotImplementedInteractor(const GeomObj& some_obj1, const GeomObj& some_obj2) 
     {
-        RLSU_ASSERT(false, "called not-iplemented interactor!"); 
+        RLSU_ERROR("called not-iplemented interactor!");
     }
 
-    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final { return NOTHING; };
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final { RLSU_ERROR("called not-iplemented interactor!");return NOTHING; };
+    
     [[nodiscard]] virtual       double         Distance     () const override final { return 0; }
     [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final { return std::make_unique<NotAnObj>(); };
 
@@ -251,6 +252,24 @@ private:
 };
 
 
+class PointTriangleInteractor : public Interactor
+{
+public:
+    PointTriangleInteractor(const Primitives::Point3& point, const Shapes::Triangle3& triangle)
+        : point_   (point)
+        , triangle_(triangle)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+private:
+    const Primitives::Point3& point_;
+    const Shapes::Triangle3 & triangle_;
+};
+
+
 class LineTriangleInteractor : public Interactor
 {
 public:
@@ -265,6 +284,24 @@ public:
 
 private:
     const Primitives::Line3& line_;
+    const Shapes::Triangle3& triangle_;
+};
+
+
+class LinesectTriangleInteractor : public Interactor
+{
+public:
+    LinesectTriangleInteractor(const Shapes::Linesect3& linesect, const Shapes::Triangle3& triangle)
+        : linesect_(linesect)
+        , triangle_(triangle)
+        {}
+
+    [[nodiscard]] virtual const CollisionCodeT CollisionCode() const override final;
+    [[nodiscard]] virtual       double         Distance     () const override final;
+    [[nodiscard]] virtual       GeomObjUniqPtr Intersect    () const override final;
+
+private:
+    const Shapes::Linesect3& linesect_;
     const Shapes::Triangle3& triangle_;
 };
 

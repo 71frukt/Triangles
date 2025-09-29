@@ -16,10 +16,10 @@ Implemented interactions table
 ---------------------------------------------------------
 |          || point | line | plane | linesect | triangle
 -----------++--------------------------------------------
-| point    ||   1   |   1  |   1   |    1     |    0
+| point    ||   1   |   1  |   1   |    1     |    1
 | line     ||       |   1  |   1   |    1     |    1
 | plane    ||       |      |   1   |    0     |    0
-| linesect ||       |      |       |    1     |    0
+| linesect ||       |      |       |    1     |    1
 | triangle ||       |      |       |          |    1
 ---------------------------------------------------------
 */
@@ -36,7 +36,7 @@ std::unique_ptr<Interactor> Interact(const GeomObj& obj1, const GeomObj& obj2)
 
         for (size_t i = 0; i < OBJ_TYPES_NUM; i++)
         {
-            for (size_t j = 0; j < i; j++)
+            for (size_t j = 0; j < OBJ_TYPES_NUM; j++)
             {
                 table[i][j] = [](const GeomObj& obj1, const GeomObj& obj2) {
                     return std::make_unique<NotImplementedInteractor>(obj1, obj2);
@@ -191,6 +191,24 @@ std::unique_ptr<Interactor> Interact(const GeomObj& obj1, const GeomObj& obj2)
 
         // =====================================================================
 
+        table[POINT3][TRIANGLE3] =
+            [](const GeomObj& obj1, const GeomObj& obj2) {
+                return std::make_unique<PointTriangleInteractor>(
+                       static_cast<const Primitives::Point3&>(obj1),
+                    static_cast<const Shapes::Triangle3 &>(obj2)
+                ); 
+            };
+
+        table[TRIANGLE3][POINT3] =
+            [](const GeomObj& obj1, const GeomObj& obj2) {
+                return std::make_unique<PointTriangleInteractor>(
+                       static_cast<const Primitives::Point3&>(obj2),
+                    static_cast<const Shapes::Triangle3 &>(obj1)
+                ); 
+            };
+
+        // =====================================================================
+
         table[LINE3][TRIANGLE3] =
             [](const GeomObj& obj1, const GeomObj& obj2) {
                 return std::make_unique<LineTriangleInteractor>(
@@ -203,6 +221,23 @@ std::unique_ptr<Interactor> Interact(const GeomObj& obj1, const GeomObj& obj2)
             [](const GeomObj& obj1, const GeomObj& obj2) {
                 return std::make_unique<LineTriangleInteractor>(
                         static_cast<const Primitives::Line3&>(obj2),
+                    static_cast<const Shapes::Triangle3&>(obj1)
+                ); 
+            };
+        // =====================================================================
+
+        table[LINESECT3][TRIANGLE3] =
+            [](const GeomObj& obj1, const GeomObj& obj2) {
+                return std::make_unique<LinesectTriangleInteractor>(
+                    static_cast<const Shapes::Linesect3&>(obj1),
+                    static_cast<const Shapes::Triangle3&>(obj2)
+                ); 
+            };
+
+        table[TRIANGLE3][LINESECT3] =
+            [](const GeomObj& obj1, const GeomObj& obj2) {
+                return std::make_unique<LinesectTriangleInteractor>(
+                    static_cast<const Shapes::Linesect3&>(obj2),
                     static_cast<const Shapes::Triangle3&>(obj1)
                 ); 
             };

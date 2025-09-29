@@ -216,6 +216,35 @@ const CollisionCodeT LinesectLinesectInteractor::CollisionCode() const
 
 // ---------------------------------------------------------------------------------
 
+const CollisionCodeT PointTriangleInteractor::CollisionCode() const
+{
+    ASSERT_HANDLE(triangle_.Assert());
+
+    if (Interact(point_, triangle_.GetPlane())->CollisionCode() != LIES_IN)
+        return NOTHING;
+
+    Math::Vector3 mul1 = (triangle_.GetPoint1() - point_) ^ (triangle_.GetPoint2() - triangle_.GetPoint1());
+    Math::Vector3 mul2 = (triangle_.GetPoint2() - point_) ^ (triangle_.GetPoint3() - triangle_.GetPoint2());
+    Math::Vector3 mul3 = (triangle_.GetPoint3() - point_) ^ (triangle_.GetPoint1() - triangle_.GetPoint3());
+
+    if (mul1.IsZero())
+        return Interact(point_, triangle_.GetSide1())->CollisionCode();
+
+    if (mul2.IsZero())
+        return Interact(point_, triangle_.GetSide2())->CollisionCode();
+
+    if (mul3.IsZero())
+        return Interact(point_, triangle_.GetSide3())->CollisionCode();
+
+        
+    if (mul1.Codirected(mul2) && mul1.Codirected(mul3) && mul2.Codirected(mul3))  
+        return LIES_IN;
+    else
+        return NOTHING;
+}
+
+// ---------------------------------------------------------------------------------
+
 const CollisionCodeT LineTriangleInteractor::CollisionCode() const
 {
     ASSERT_HANDLE(line_    .Assert());
@@ -237,11 +266,22 @@ const CollisionCodeT LineTriangleInteractor::CollisionCode() const
     }
 
     // else
-    RLSU_WARNING("line is crossing triangle, We don't know how to count yet!");
-    return NOTHING;
+    return Interact(*Interact(line_, triangle_.GetPlane())->Intersect(), triangle_)->CollisionCode();
 }
 
+// ---------------------------------------------------------------------------------
 
+const CollisionCodeT LinesectTriangleInteractor::CollisionCode() const
+{
+    ASSERT_HANDLE(linesect_.Assert());
+    ASSERT_HANDLE(triangle_.Assert());
+
+    if (Intersect()->WhoAmI() == NOT_AN_OBJ)
+        return NOTHING;
+
+    else
+        return CROSS;
+}
 // ---------------------------------------------------------------------------------
 
 const CollisionCodeT TriangleTriangleInteractor::CollisionCode() const
@@ -430,6 +470,22 @@ double LineTriangleInteractor::Distance() const
     return 0;
 }
 
+double LinesectTriangleInteractor::Distance() const
+{
+    ASSERT_HANDLE(linesect_.Assert());
+    ASSERT_HANDLE(triangle_.Assert());
+
+    RLSU_WARNING("Trying to get distance(linesect, trangle) We don't know how to count yet!");
+    return 0;
+}
+
+double PointTriangleInteractor::Distance() const
+{
+    ASSERT_HANDLE(triangle_.Assert());
+
+    RLSU_WARNING("Trying to get distance(point, trangle) We don't know how to count yet!");
+    return 0;
+}
 // ==========/ DISTANCE ============================================================
 
 
@@ -667,6 +723,14 @@ GeomObjUniqPtr LinesectLinesectInteractor::Intersect() const
 
 }
 
+GeomObjUniqPtr PointTriangleInteractor::Intersect() const
+{
+    if (CollisionCode() == LIES_IN)
+        return std::make_unique<Primitives::Point3>(point_);
+
+    else
+        return ERROR_HANDLE(std::make_unique<NotAnObj>());
+}
 
 GeomObjUniqPtr LineTriangleInteractor::Intersect() const
 {
@@ -736,14 +800,23 @@ GeomObjUniqPtr LineTriangleInteractor::Intersect() const
                     return ERROR_HANDLE(ERROR_HANDLE(std::make_unique<Shapes::Linesect3>(point1, point2)));
                 }
             }
-        }
-            
-         
+        }         
     }
 
     // else
-    RLSU_WARNING("Attempt to calculate cross point of line and non-prarallel triangle. We dont't know how to calc it yet");
-    return ERROR_HANDLE(std::make_unique<NotAnObj>());
+    GeomObjUniqPtr mb_cross_point = Interact(line_, triangle_.GetPlane())->Intersect();
+    return Interact(*mb_cross_point, line_)->Intersect();
+}
+
+
+GeomObjUniqPtr LinesectTriangleInteractor::Intersect() const
+{
+    linesect_.Assert();
+    triangle_.Assert();
+
+    GeomObjUniqPtr cross_obj = Interact(linesect_.GetLine(), triangle_)->Intersect();
+
+    return Interact(linesect_, *cross_obj)->Intersect();
 }
 
 

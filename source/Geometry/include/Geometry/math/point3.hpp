@@ -17,6 +17,10 @@ public:
     [[nodiscard]] double GetY() const { return rad_vec_.GetY(); }
     [[nodiscard]] double GetZ() const { return rad_vec_.GetZ(); }
 
+                  double SetX(double x) { return rad_vec_.SetX(x); }
+                  double SetY(double y) { return rad_vec_.SetY(y); }
+                  double SetZ(double z) { return rad_vec_.SetZ(z); }
+
     [[nodiscard]] bool    operator== (const Point3 & other) const  { return this->rad_vec_ == other.rad_vec_; }
     [[nodiscard]] bool    operator!= (const Point3 & other) const  { return this->rad_vec_ != other.rad_vec_; }
     [[nodiscard]] Point3  operator+  (const Vector3& vec)   const  { return Point3 (rad_vec_.GetX() + vec  .GetX(), rad_vec_.GetY() + vec  .GetY(), rad_vec_.GetZ() + vec  .GetZ()); };

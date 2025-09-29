@@ -1,7 +1,11 @@
+#include "Geometry/common/geometry_obj.hpp"
+#include "Geometry/math/vector3.hpp"
 #include "Geometry/math_engine/collision_handler.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/shapes/shapes.hpp"
 #include "RLogSU/error_handler.hpp"
+#include <algorithm>
+#include <memory>
 
 namespace Geometry::Shapes {
 
@@ -33,6 +37,7 @@ void Triangle3::Assert() const
     ASSERT_HANDLE(side3_.Assert());
     ASSERT_HANDLE(plane_.Assert());
 
+    RLSU_ASSERT((point1_ - point2_).Collinear(point1_ - point3_) == false);
     RLSU_ASSERT(point1_ != point2_ && point1_ != point3_ && point2_ != point3_);
 
     RLSU_ASSERT(MathEngine::Interact(point1_, side1_)->CollisionCode() == MathEngine::LIES_IN);
@@ -58,8 +63,6 @@ Triangle3::Triangle3(const Primitives::Point3& point1, const Primitives::Point3&
     , plane_(point1, point2, point3)
 { 
     ASSERT_HANDLE(Assert());
-
-    RLSU_VERIFY(point1 != point2 && point1 != point3 && point2 != point3);
 }
 
 Triangle3::Triangle3(const Primitives::Line3& line1 , const Primitives::Line3& line2 , const Primitives::Line3& line3 )
@@ -76,6 +79,37 @@ Triangle3::Triangle3(const Primitives::Line3& line1 , const Primitives::Line3& l
     ASSERT_HANDLE(Assert());
 
     RLSU_VERIFY(side1_  != side2_  && side1_  != side3_  && side2_  != side3_);
+}
+
+GeomObjUniqPtr Triangle3::BuildGeomObj(const Primitives::Point3& point1, const Primitives::Point3& point2, const Primitives::Point3& point3)
+{
+    if (point1 == point2 && point1 == point3 && point2 == point3)
+    {
+        return std::make_unique<Primitives::Point3>(point1);
+    }
+
+    else if ((point1 - point2).Collinear(point1 - point3))
+    {
+        double ab_len2 = (point2 - point1).GetLen2();
+        double bc_len2 = (point3 - point2).GetLen2();
+        double ca_len2 = (point1 - point3).GetLen2();
+
+        double max = std::max(std::max(ab_len2, bc_len2), ca_len2);
+
+        if (max == ab_len2)
+            return std::make_unique<Linesect3>(point2, point1);
+            
+        else if (max == bc_len2)
+            return std::make_unique<Linesect3>(point3, point2);
+
+        else // if (max == ca_len2)
+            return std::make_unique<Linesect3>(point3, point1);
+    }
+
+    else
+    {
+        return ERROR_HANDLE(std::make_unique<Triangle3>(point1, point2, point3));
+    }
 }
 
 }

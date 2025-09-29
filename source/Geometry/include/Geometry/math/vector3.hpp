@@ -25,6 +25,10 @@ public:
     [[nodiscard]] double GetY   () const { return y_; }
     [[nodiscard]] double GetZ   () const { return z_; }
 
+                  double SetX (double x) { return x_ = x; }
+                  double SetY (double y) { return y_ = y; }
+                  double SetZ (double z) { return z_ = z; }
+
     [[nodiscard]] double GetLen2() const { return x_ * x_ + y_ * y_ + z_ * z_; }
     [[nodiscard]] double GetLen () const { return std::sqrt(GetLen2()); }
 
@@ -51,7 +55,14 @@ public:
     [[nodiscard]] bool    IsZero     () const { return (DoubleZero(x_)) && DoubleZero(y_) && DoubleZero(z_); }
 
     [[nodiscard]] bool    Collinear  (const Vector3& other) const { return (*this ^ other).IsZero(); }
-    
+
+    [[nodiscard]] bool    Codirected (const Vector3& other) const
+    {
+        return (DoublePositive(this->x_ * other.x_))
+             && DoublePositive(this->y_ * other.y_)
+             && DoublePositive(this->z_ * other.z_);
+    }
+
     [[nodiscard]] bool    Normal     (const Vector3& other) const { return DoubleZero(*this * other); }
 
     void Dump(const std::string& name = "some_vector") const;
