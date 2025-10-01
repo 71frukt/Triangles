@@ -33,6 +33,7 @@ public:
     [[nodiscard]] virtual        double         Distance     () const = 0;
     [[nodiscard]] virtual        GeomObjUniqPtr Intersect    () const = 0;
 
+    virtual ~Interactor() = default; 
 };
 
 std::unique_ptr<Interactor> Interact(const GeomObj& obj1, const GeomObj& obj2);
