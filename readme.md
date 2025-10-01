@@ -2,7 +2,7 @@
 
 ## Сборка
 ```bash
-git clone --recurse-submodules git@github.com:71frukt/Triangles.git
+git clone --recurse-submodules  
 cd Triangles
 cmake -B build -S .
 cmake --build build
