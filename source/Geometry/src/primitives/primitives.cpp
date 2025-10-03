@@ -9,7 +9,44 @@
 
 namespace Geometry::Primitives {
 
-Geometry::Math::Point3 Point3::CastFromGeomObj_(const GeomObjUniqPtr& game_obj)
+int Point3::CompareX(const Point3 &point1, const Point3 &point2)
+{
+    if (Math::DoubleG(point1.GetX(), point2.GetX()))
+        return 1;
+
+    else if (Math::DoubleB(point1.GetX(), point2.GetX()))
+        return -1;
+
+    else
+        return 0;
+}
+
+int Point3::CompareY(const Point3 &point1, const Point3 &point2)
+{
+    if (Math::DoubleG(point1.GetY(), point2.GetY()))
+        return 1;
+
+    else if (Math::DoubleB(point1.GetY(), point2.GetY()))
+        return -1;
+
+    else
+        return 0;
+}
+
+int Point3::CompareZ(const Point3 &point1, const Point3 &point2)
+{
+    if (Math::DoubleG(point1.GetZ(), point2.GetZ()))
+        return 1;
+
+    else if (Math::DoubleB(point1.GetZ(), point2.GetZ()))
+        return -1;
+
+    else
+        return 0;
+}
+
+
+Math::Point3 Point3::CastFromGeomObj_(const GeomObjUniqPtr& game_obj)
 {
     RLSU_ASSERT(game_obj->WhoAmI() == POINT3);
     auto point_ptr = dynamic_cast<const Geometry::Math::Point3*>(game_obj.get());

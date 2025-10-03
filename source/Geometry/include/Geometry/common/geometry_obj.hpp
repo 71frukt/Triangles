@@ -58,7 +58,7 @@ public:
     
     virtual void Assert() const = 0;
 
-    void Dump(const std::string& name) const
+    void Dump(const std::string& name = "some_obj") const
     {
         RLSU_LOG("\n");
         RLSU_LOG("'{}' [{}]  (typeof {}) {{\n", name, static_cast<const void*>(this), ERROR_HANDLE(ObjTypeStr(WhoAmI())));

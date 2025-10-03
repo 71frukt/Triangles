@@ -29,7 +29,11 @@ public:
     [[nodiscard]] virtual ObjType WhoAmI() const override { return POINT3; };
     
     virtual void Assert() const override { };
-    
+
+    [[nodiscard]] static int CompareX(const Point3& point1, const Point3& point2);
+    [[nodiscard]] static int CompareY(const Point3& point1, const Point3& point2);
+    [[nodiscard]] static int CompareZ(const Point3& point1, const Point3& point2);
+
 private:
     Geometry::Math::Point3 CastFromGeomObj_(const GeomObjUniqPtr& game_obj);
 

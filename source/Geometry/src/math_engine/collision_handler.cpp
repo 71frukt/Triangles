@@ -112,7 +112,6 @@ const CollisionCodeT LinePlaneInteractor::CollisionCode() const
     const Math::Vector3&      plane_normd_norm = plane_.GetNormdNormality();
     
     const Primitives::Point3& line_origin      = line_.GetOrigin();
-    // const Primitives::Point3& plane_origin     = plane_.GetOrigin();
 
     if (line_normd_dir.Normal(plane_normd_norm))
     {
