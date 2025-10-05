@@ -1,50 +1,95 @@
 #include "Geometry/math/double_handle.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/shapes/shapes.hpp"
-#include "Geometry/math_engine/bvh_tree.hpp"
 #include "Geometry/math_engine/aabb.hpp"
 #include "RLogSU/error_handler.hpp"
+#include "RLogSU/logger.hpp"
 
 #include <algorithm>
 
 namespace Geometry::MathEngine {
 
-    
-AABContainer::AABContainer(const std::list<const AABBox*>& children_ref, const AABBox* father_ptr)
-    : AABBox(father_ptr)
-    , children(children_ref)
+Primitives::Point3 AABBox::MaxAxisPoint(const Primitives::Point3 &a, const Primitives::Point3 &b)
 {
-    UpdateSizeAccordToChildren();
+    double max_x = std::max(a.GetX(), b.GetX());
+    double max_y = std::max(a.GetY(), b.GetY());
+    double max_z = std::max(a.GetZ(), b.GetZ());
+
+    return {max_x, max_y, max_z};
+}
+
+Primitives::Point3 AABBox::MinAxisPoint(const Primitives::Point3 &a, const Primitives::Point3 &b)
+{
+    double min_x = std::min(a.GetX(), b.GetX());
+    double min_y = std::min(a.GetY(), b.GetY());
+    double min_z = std::min(a.GetZ(), b.GetZ());
+
+    return {min_x, min_y, min_z};
 }
 
 
-AABContainer::AABContainer(const AABBox* father_ptr)
+AABContainer::AABContainer(const std::list<AABBox*>& children_ref, const AABBox* father_ptr)
     : AABBox(father_ptr)
-    , children()
+{
+    for (AABBox* const adding_child : children_ref)
+        AddChild(*adding_child);
+}
+
+
+AABContainer::AABContainer(const AABContainer* father_ptr)
+    : AABBox(father_ptr)
+    , children_()
 {}
 
-void AABContainer::UpdateSizeAccordToChildren()
+
+void AABContainer::MoveChildFromOtherContainer(const std::list<AABBox*>::const_iterator& child_it, AABContainer* const other_cont)
 {
-    double min_x = 0, max_x = 0;
-    double min_y = 0, max_y = 0;
-    double min_z = 0, max_z = 0;
+    AABBox* child_ptr = *child_it;
 
-    for (const AABBox* child : children)
+    this->children_.splice(this->children_.end(), other_cont->children_, child_it);
+
+    child_ptr->father = this;
+
+    UpdateSizeAccordChild(*child_ptr);
+}
+
+void AABContainer::AddChild(AABBox& new_child)
+{
+    children_.push_back(&new_child);
+    new_child.father = this;
+
+    UpdateSizeAccordChild(new_child);
+}
+
+void AABContainer::AbandonChild(AABBox& unwanted_child)
+{
+    RLSU_ASSERT(ContainsChild(unwanted_child));
+
+    std::list<AABBox*>::iterator unwanted_it = std::find(children_.begin(), children_.end(), &unwanted_child);
+    children_.erase(unwanted_it);
+}
+
+
+void AABContainer::UpdateSizeAccordChild(const AABBox& child)
+{
+    if (!first_child_added_)
     {
-        ASSERT_HANDLE(child->Assert());
-
-        if (child->GetP0().GetX() < min_x)  min_x = child->GetP0().GetX();
-        if (child->GetP0().GetY() < min_y)  min_y = child->GetP0().GetY();
-        if (child->GetP0().GetZ() < min_z)  min_z = child->GetP0().GetZ();
-        
-        if (child->GetP1().GetX() > max_x)  max_x = child->GetP1().GetX();
-        if (child->GetP1().GetY() > max_y)  max_y = child->GetP1().GetY();
-        if (child->GetP1().GetZ() > max_z)  max_z = child->GetP1().GetZ();
+        p0_ = child.GetP0();
+        p1_ = child.GetP1();
+        first_child_added_ = true;
     }
 
-    p0_ = {min_x - Math::CmpEps, min_y - Math::CmpEps, min_z - Math::CmpEps};
-    p1_ = {max_x + Math::CmpEps, max_y + Math::CmpEps, max_z + Math::CmpEps};
+    RLSU_ASSERT(ContainsChild(child));
+
+    this->SetP0(MinAxisPoint(this->GetP0(), child.GetP0()));
+    this->SetP1(MaxAxisPoint(this->GetP1(), child.GetP1()));
 }
+
+bool AABContainer::ContainsChild(const AABBox& child) const
+{
+    return (std::find(children_.begin(), children_.end(), &child) != children_.end());
+}
+
 
 AABLeaf::AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr)
     : AABBox(father_ptr)
@@ -53,9 +98,9 @@ AABLeaf::AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr)
     ASSERT_HANDLE(inscribed->Assert());
 
     switch (inscribed_->WhoAmI()) {
-        case POINT3    : BuildFromPoint_   ();  break;
-        case LINESECT3 : BuildFromLinesect_();  break;
-        case TRIANGLE3 : BuildFromTriangle_();  break;
+        case POINT3    : ERROR_HANDLE(BuildFromPoint_   ());  break;
+        case LINESECT3 : ERROR_HANDLE(BuildFromLinesect_());  break;
+        case TRIANGLE3 : ERROR_HANDLE(BuildFromTriangle_());  break;
         
         default        : RLSU_ERROR("invalid owner type = '{}'", ObjTypeStr(inscribed_->WhoAmI()));        
     }
@@ -68,18 +113,20 @@ void AABLeaf::BuildFromPoint_()
 
     auto inscribed_point = static_cast<const Geometry::Primitives::Point3* const>(inscribed_);
 
-    p0_.SetX(inscribed_point->GetX());
-    p0_.SetY(inscribed_point->GetY());
-    p0_.SetZ(inscribed_point->GetZ());
+    p0_.SetX(inscribed_point->GetX() - Math::CmpEps);
+    p0_.SetY(inscribed_point->GetY() - Math::CmpEps);
+    p0_.SetZ(inscribed_point->GetZ() - Math::CmpEps);
 
-    p0_.SetX(inscribed_point->GetX());
-    p0_.SetY(inscribed_point->GetY());
-    p0_.SetZ(inscribed_point->GetZ());
+    p1_.SetX(inscribed_point->GetX() + Math::CmpEps);
+    p1_.SetY(inscribed_point->GetY() + Math::CmpEps);
+    p1_.SetZ(inscribed_point->GetZ() + Math::CmpEps);
 }
 
 
 void AABLeaf::BuildFromLinesect_()
 {
+    RLSU_WARNING("building from linesect~~!!");
+
     RLSU_ASSERT(inscribed_->WhoAmI() == LINESECT3);
 
     auto inscribed_linesect = static_cast<const Geometry::Shapes::Linesect3* const>(inscribed_);
@@ -94,12 +141,12 @@ void AABLeaf::BuildFromLinesect_()
     double z1_ = std::max(inscribed_linesect->GetPoint1().GetZ(), inscribed_linesect->GetPoint2().GetZ());
 
     p0_.SetX(x0_);
-    p0_.SetY(x0_);
-    p0_.SetZ(x0_);
+    p0_.SetY(y0_);
+    p0_.SetZ(z0_);
 
     p1_.SetX(x1_);
-    p1_.SetY(x1_);
-    p1_.SetZ(x1_);
+    p1_.SetY(y1_);
+    p1_.SetZ(z1_);
 }
 
 
@@ -141,37 +188,5 @@ void AABLeaf::BuildFromTriangle_()
     p1_.SetZ(max_z);
 }
 
-
-void AABBox::Assert() const
-{
-    RLSU_ASSERT(father);
-    RLSU_ASSERT(p0_.GetX() <= p1_.GetX());
-    RLSU_ASSERT(p0_.GetY() <= p1_.GetY());
-    RLSU_ASSERT(p0_.GetZ() <= p1_.GetZ());
-}
-
-void AABLeaf::Assert() const
-{
-    AABBox::Assert();
-    inscribed_->Assert();
-}
-
-void AABContainer::Assert() const
-{
-    AABBox::Assert();
-
-    for (auto child : children)
-    {
-        // checking that the shape is at least PARTIALLY in the box
-
-        RLSU_ASSERT(child->GetP1().GetX() >= p0_.GetX());
-        RLSU_ASSERT(child->GetP1().GetY() >= p0_.GetY());
-        RLSU_ASSERT(child->GetP1().GetZ() >= p0_.GetX());
-        
-        RLSU_ASSERT(child->GetP0().GetX() <= p1_.GetX());
-        RLSU_ASSERT(child->GetP0().GetY() <= p1_.GetY());
-        RLSU_ASSERT(child->GetP0().GetZ() <= p1_.GetX());
-    }
-}
 
 }
