@@ -1,4 +1,5 @@
 #include "Geometry/math/double_handle.hpp"
+#include "Geometry/math/vector3.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/shapes/shapes.hpp"
 #include "Geometry/math_engine/aabb.hpp"
@@ -8,6 +9,7 @@
 #include <algorithm>
 
 namespace Geometry::MathEngine {
+
 
 Primitives::Point3 AABBox::MaxAxisPoint(const Primitives::Point3 &a, const Primitives::Point3 &b)
 {
@@ -28,98 +30,97 @@ Primitives::Point3 AABBox::MinAxisPoint(const Primitives::Point3 &a, const Primi
 }
 
 
-AABContainer::AABContainer(const std::list<AABBox*>& children_ref, const AABBox* father_ptr)
-    : AABBox(father_ptr)
+AABContainer::AABContainer(const std::list<NodeConstIt>& children_ref, NodeConstIt father_it)
+    : AABBox(father_it)
 {
-    for (AABBox* const adding_child : children_ref)
-        AddChild(*adding_child);
+    for (NodeConstIt adding_child : children_ref)
+    {
+        RLSU_ASSERT(NodeItIsValid(adding_child));
+        AddChild(adding_child);
+    }
 }
 
 
-AABContainer::AABContainer(const AABContainer* father_ptr)
-    : AABBox(father_ptr)
+AABContainer::AABContainer(NodeConstIt father_it)
+    : AABBox(father_it)
     , children_()
 {}
 
 
-void AABContainer::MoveChildFromOtherContainer(const std::list<AABBox*>::const_iterator& child_it, AABContainer* const other_cont)
+void AABContainer::AddChild(NodeConstIt new_child_it)
 {
-    AABBox* child_ptr = *child_it;
+    children_.push_back(new_child_it);
 
-    this->children_.splice(this->children_.end(), other_cont->children_, child_it);
-
-    child_ptr->father = this;
-
-    UpdateSizeAccordChild(*child_ptr);
+    UpdateSizeAccordChild(new_child_it);
 }
 
-void AABContainer::AddChild(AABBox& new_child)
+void AABContainer::AbandonChild(NodeConstIt unwanted_child_it)
 {
-    children_.push_back(&new_child);
-    new_child.father = this;
+    RLSU_ASSERT(ContainsChild(unwanted_child_it));
 
-    UpdateSizeAccordChild(new_child);
-}
-
-void AABContainer::AbandonChild(AABBox& unwanted_child)
-{
-    RLSU_ASSERT(ContainsChild(unwanted_child));
-
-    std::list<AABBox*>::iterator unwanted_it = std::find(children_.begin(), children_.end(), &unwanted_child);
-    children_.erase(unwanted_it);
+    children_.erase(std::find(children_.begin(), children_.end(), unwanted_child_it));
 }
 
 
-void AABContainer::UpdateSizeAccordChild(const AABBox& child)
+void AABContainer::UpdateSizeAccordChild(NodeConstIt child_it)
 {
+    RLSU_ASSERT(ContainsChild(child_it));
+
     if (!first_child_added_)
     {
-        p0_ = child.GetP0();
-        p1_ = child.GetP1();
+        p0_ = child_it->get()->GetP0();
+        p1_ = child_it->get()->GetP1();
         first_child_added_ = true;
     }
 
-    RLSU_ASSERT(ContainsChild(child));
-
-    this->SetP0(MinAxisPoint(this->GetP0(), child.GetP0()));
-    this->SetP1(MaxAxisPoint(this->GetP1(), child.GetP1()));
+    this->SetP0(MinAxisPoint(this->GetP0(), child_it->get()->GetP0()));
+    this->SetP1(MaxAxisPoint(this->GetP1(), child_it->get()->GetP1()));
 }
 
-bool AABContainer::ContainsChild(const AABBox& child) const
+
+bool AABContainer::ContainsChild(NodeConstIt child_it) const
 {
-    return (std::find(children_.begin(), children_.end(), &child) != children_.end());
+    return (std::find(children_.begin(), children_.end(), child_it) != children_.end());
 }
 
 
-AABLeaf::AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr)
+bool AABContainer::NoVolume() const
+{
+    Math::Vector3 diag = p1_ - p0_;
+
+    return (Math::DoubleZero(diag.GetX() * diag.GetY() * diag.GetZ()));
+}
+
+
+AABLeaf::AABLeaf(const GeomObj& inscribed, NodeConstIt father_ptr)
     : AABBox(father_ptr)
     , inscribed_(inscribed)
 {
-    ASSERT_HANDLE(inscribed->Assert());
+    ASSERT_HANDLE(inscribed.Assert());
 
-    switch (inscribed_->WhoAmI()) {
+    switch (inscribed_.WhoAmI()) {
         case POINT3    : ERROR_HANDLE(BuildFromPoint_   ());  break;
         case LINESECT3 : ERROR_HANDLE(BuildFromLinesect_());  break;
         case TRIANGLE3 : ERROR_HANDLE(BuildFromTriangle_());  break;
         
-        default        : RLSU_ERROR("invalid owner type = '{}'", ObjTypeStr(inscribed_->WhoAmI()));        
+        default        : RLSU_ERROR("invalid owner type = '{}'", ObjTypeStr(inscribed_.WhoAmI()));        
     }
 }
 
 
 void AABLeaf::BuildFromPoint_()
 {
-    RLSU_ASSERT(inscribed_->WhoAmI() == POINT3);
+    RLSU_ASSERT(inscribed_.WhoAmI() == POINT3);
 
-    auto inscribed_point = static_cast<const Geometry::Primitives::Point3* const>(inscribed_);
+    const Primitives::Point3& inscribed_ref = static_cast<const Geometry::Primitives::Point3&>(inscribed_);
 
-    p0_.SetX(inscribed_point->GetX() - Math::CmpEps);
-    p0_.SetY(inscribed_point->GetY() - Math::CmpEps);
-    p0_.SetZ(inscribed_point->GetZ() - Math::CmpEps);
+    p0_.SetX(inscribed_ref.GetX() - Math::CmpEps);
+    p0_.SetY(inscribed_ref.GetY() - Math::CmpEps);
+    p0_.SetZ(inscribed_ref.GetZ() - Math::CmpEps);
 
-    p1_.SetX(inscribed_point->GetX() + Math::CmpEps);
-    p1_.SetY(inscribed_point->GetY() + Math::CmpEps);
-    p1_.SetZ(inscribed_point->GetZ() + Math::CmpEps);
+    p1_.SetX(inscribed_ref.GetX() + Math::CmpEps);
+    p1_.SetY(inscribed_ref.GetY() + Math::CmpEps);
+    p1_.SetZ(inscribed_ref.GetZ() + Math::CmpEps);
 }
 
 
@@ -127,18 +128,18 @@ void AABLeaf::BuildFromLinesect_()
 {
     RLSU_WARNING("building from linesect~~!!");
 
-    RLSU_ASSERT(inscribed_->WhoAmI() == LINESECT3);
+    RLSU_ASSERT(inscribed_.WhoAmI() == LINESECT3);
 
-    auto inscribed_linesect = static_cast<const Geometry::Shapes::Linesect3* const>(inscribed_);
+    auto inscribed_linesect = static_cast<const Geometry::Shapes::Linesect3& >(inscribed_);
     
-    double x0_ = std::min(inscribed_linesect->GetPoint1().GetX(), inscribed_linesect->GetPoint2().GetX());
-    double x1_ = std::max(inscribed_linesect->GetPoint1().GetX(), inscribed_linesect->GetPoint2().GetX());
+    double x0_ = std::min(inscribed_linesect.GetPoint1().GetX(), inscribed_linesect.GetPoint2().GetX());
+    double x1_ = std::max(inscribed_linesect.GetPoint1().GetX(), inscribed_linesect.GetPoint2().GetX());
 
-    double y0_ = std::min(inscribed_linesect->GetPoint1().GetY(), inscribed_linesect->GetPoint2().GetY());
-    double y1_ = std::max(inscribed_linesect->GetPoint1().GetY(), inscribed_linesect->GetPoint2().GetY());
+    double y0_ = std::min(inscribed_linesect.GetPoint1().GetY(), inscribed_linesect.GetPoint2().GetY());
+    double y1_ = std::max(inscribed_linesect.GetPoint1().GetY(), inscribed_linesect.GetPoint2().GetY());
 
-    double z0_ = std::min(inscribed_linesect->GetPoint1().GetZ(), inscribed_linesect->GetPoint2().GetZ());
-    double z1_ = std::max(inscribed_linesect->GetPoint1().GetZ(), inscribed_linesect->GetPoint2().GetZ());
+    double z0_ = std::min(inscribed_linesect.GetPoint1().GetZ(), inscribed_linesect.GetPoint2().GetZ());
+    double z1_ = std::max(inscribed_linesect.GetPoint1().GetZ(), inscribed_linesect.GetPoint2().GetZ());
 
     p0_.SetX(x0_);
     p0_.SetY(y0_);
@@ -152,21 +153,21 @@ void AABLeaf::BuildFromLinesect_()
 
 void AABLeaf::BuildFromTriangle_()
 {
-    RLSU_ASSERT(inscribed_->WhoAmI() == TRIANGLE3);
+    RLSU_ASSERT(inscribed_.WhoAmI() == TRIANGLE3);
     
-    auto inscribed_triangle = static_cast<const Geometry::Shapes::Triangle3* const>(inscribed_);
+    auto inscribed_triangle = static_cast<const Geometry::Shapes::Triangle3&>(inscribed_);
 
-    double tr_x1 = inscribed_triangle->GetPoint1().GetX();
-    double tr_x2 = inscribed_triangle->GetPoint2().GetX();
-    double tr_x3 = inscribed_triangle->GetPoint3().GetX();
+    double tr_x1 = inscribed_triangle.GetPoint1().GetX();
+    double tr_x2 = inscribed_triangle.GetPoint2().GetX();
+    double tr_x3 = inscribed_triangle.GetPoint3().GetX();
 
-    double tr_y1 = inscribed_triangle->GetPoint1().GetY();
-    double tr_y2 = inscribed_triangle->GetPoint2().GetY();
-    double tr_y3 = inscribed_triangle->GetPoint3().GetY();
+    double tr_y1 = inscribed_triangle.GetPoint1().GetY();
+    double tr_y2 = inscribed_triangle.GetPoint2().GetY();
+    double tr_y3 = inscribed_triangle.GetPoint3().GetY();
 
-    double tr_z1 = inscribed_triangle->GetPoint1().GetZ();
-    double tr_z2 = inscribed_triangle->GetPoint2().GetZ();
-    double tr_z3 = inscribed_triangle->GetPoint3().GetZ();
+    double tr_z1 = inscribed_triangle.GetPoint1().GetZ();
+    double tr_z2 = inscribed_triangle.GetPoint2().GetZ();
+    double tr_z3 = inscribed_triangle.GetPoint3().GetZ();
 
 
     double max_x = std::max({tr_x1, tr_x2, tr_x3});

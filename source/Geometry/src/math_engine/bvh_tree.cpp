@@ -8,6 +8,7 @@
 #include "RLogSU/logger.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <memory>
 #include <functional>
@@ -22,30 +23,71 @@ BvhTree::BvhTree(const std::vector<const GeomObj*>& objects, const size_t box_ma
     {
         ASSERT_HANDLE(objects[i]->Assert());
 
-        nodes_.emplace_back(std::make_unique<AABLeaf>(objects[i]));
+        nodes_.emplace_back(std::make_unique<AABLeaf>(*objects[i]));
     }
 
     ERROR_HANDLE(BuildRootBox_());
-    RLSU_ASSERT(root_);
     RLSU_DUMP(root_->Dump(), "root");
     RLSU_DUMP(Dump(), "starit leafs");
 
     ERROR_HANDLE(SplitIntoBoxes_(*root_));
+    // ERROR_HANDLE(CleanUp_(root_));
 
     ASSERT_HANDLE(Assert());
 }
 
+void BvhTree::AdoptChildToFather(NodeConstIt father_it, NodeConstIt new_child_it)
+{
+    RLSU_ASSERT(father_it->get()->Type() == CONTAINER);
+
+    const AABContainer& const_father = static_cast<const AABContainer&>(*father_it->get());
+    AABContainer& father = const_cast<AABContainer&>(const_father);
+
+    AABBox& new_child = const_cast<AABBox&>(*new_child_it->get());
+
+    father.AddChild(new_child_it);
+    new_child.father = father_it;
+}
+
+// void BvhTree::MoveChildToOtherContainer_(NodeConstIt child_it, NodeConstIt source_cont_it, NodeConstIt& target_cont_it)
+// {
+//     ASSERT_HANDLE(Assert());
+//     RLSU_ASSERT((*source_cont_it)->Type() == CONTAINER);
+//     RLSU_ASSERT((*target_cont_it)->Type() == CONTAINER);
+
+//     const AABContainer& const_source = static_cast<const AABContainer&>(*source_cont_it->get());
+//     AABContainer& source = const_cast<AABContainer&>(const_source);
+
+//     RLSU_ASSERT(source.ContainsChild(child_it));
+
+//     AdoptChildToFather(target_cont_it, child_it);
+//     source.AbandonChild(child_it);
+
+//     // AABBox& child = *(**child_it_it).get();
+    
+//     // child.father = 
+
+//     // AABBox* child_ptr = *child_it;
+
+//     // this->children_.splice(this->children_.end(), other_cont->children_, child_it);
+
+//     // child_ptr->father = this;
+
+//     // UpdateSizeAccordChild(*child_ptr);
+// }
+
 
 void BvhTree::BuildRootBox_()
 {
-    std::list<AABBox*> all_children;
+    std::list<NodeConstIt> all_children;
 
-    for (size_t i = 0; i < nodes_.size(); i++)
+
+    for (NodeConstIt it = nodes_.begin(); it != nodes_.end(); it++)
     {
-        all_children.push_back(nodes_[i].get());
+        all_children.push_back(it);
     }
 
-    auto root = ERROR_HANDLE(std::make_unique<AABContainer>(std::move(all_children), nullptr));
+    auto root = ERROR_HANDLE(std::make_unique<AABContainer>(std::move(all_children), nodes_.end()));
     nodes_.push_back(std::move(root));
 
     root_ = static_cast<AABContainer*>(nodes_.back().get());
@@ -112,7 +154,7 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
         {
             auto child_it_cpy = child_it++;
             
-            ERROR_HANDLE(sub_cont->MoveChildFromOtherContainer(child_it_cpy, &cur_cont));
+            ERROR_HANDLE(sub_cont->MoveChildFromOtherContainer(child_it_cpy, cur_cont));
 
             continue;
         }
@@ -146,11 +188,11 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
     nodes_.push_back(std::move(sub_cont));
 
     
-    if (&cur_cont != root_)
+    if (cur_cont != root_)
     {
         AABContainer* cur_cont_father = cur_cont.father;
 
-        ERROR_HANDLE(cur_cont_father->AbandonChild(cur_cont));
+        ERROR_HANDLE(cur_cont_father->AbandonChild(*cur_cont));
         ERROR_HANDLE(cur_cont_father->AddChild(*new_father_ptr));
     }
     
@@ -158,29 +200,59 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
         root_ = new_father_ptr;
 
 
-    ERROR_HANDLE(new_father_ptr->AddChild( cur_cont      ));
-    ERROR_HANDLE(new_father_ptr->AddChild(*sub_cont_ptr  ));
+    ERROR_HANDLE(new_father_ptr->AddChild(*cur_cont    ));
+    ERROR_HANDLE(new_father_ptr->AddChild(*sub_cont_ptr));
 
-    ERROR_HANDLE(SplitIntoBoxes_( cur_cont));
-    ERROR_HANDLE(SplitIntoBoxes_(*sub_cont_ptr));
-
-    if (cur_cont.IsDegraded())
-        ResolveDegradedContainer_(cur_cont);
-
-    if (sub_cont_ptr->IsDegraded())
-        ResolveDegradedContainer_(*sub_cont_ptr);
-
-    if (cur_cont.IsEmpty())
-        ResolveEmptyContainer_(cur_cont);
-
-    if (sub_cont_ptr->IsEmpty())
-        ResolveEmptyContainer_(*sub_cont_ptr);
+    RLSU_DUMP(Dump(), "before if");
+    // if the old container is completely pressed against the wall after crushing, 
+    // then there is no point in crushing further in order to avoid eternal recursion.
+    if (!cur_cont.NoVolume())
+    {
+        ERROR_HANDLE(SplitIntoBoxes_( cur_cont));
+        ERROR_HANDLE(SplitIntoBoxes_(sub_cont_ptr));
+    }
 }
 
+void BvhTree::CleanUp_(AABContainer* cont)
+{
+    ASSERT_HANDLE(cont->Assert());
+    ASSERT_HANDLE(Assert());
+    RLSU_ASSERT(typeid(*cont) == typeid(AABContainer));
+
+    RLSU_INFO("in cleanup");
+
+    if (cont->IsEmpty())
+    {
+        // ResolveEmptyContainer_(*cont);
+        return;
+    }
+
+    for (AABBox* child_ptr : cont->GetChildren())
+    {
+        RLSU_INFO("imhere");
+        if (typeid(*child_ptr) == typeid(AABContainer))
+            CleanUp_(static_cast<AABContainer*>(child_ptr));
+    }
+
+    // if (cont->IsDegraded())
+    //     ResolveDegradedContainer_(*cont);
+}
 
 void BvhTree::ResolveDegradedContainer_(AABContainer& degraded_cont)
 {
+    ASSERT_HANDLE(Assert());
     RLSU_ASSERT(degraded_cont.IsDegraded());
+
+    if (&degraded_cont == root_)
+    {
+        AABBox* child = degraded_cont.GetChildren().front();
+        
+        if (typeid(child) == typeid(AABContainer))
+            root_ = static_cast<AABContainer*>(child);
+
+        EraseNode_(&degraded_cont);
+        return;
+    }
 
     degraded_cont.father->AddChild(*degraded_cont.GetChildren().front());
     degraded_cont.father->AbandonChild(degraded_cont);
@@ -190,23 +262,34 @@ void BvhTree::ResolveDegradedContainer_(AABContainer& degraded_cont)
 
 void BvhTree::ResolveEmptyContainer_(AABContainer& empty_cont)
 {
+    ASSERT_HANDLE(Assert());
     RLSU_ASSERT(empty_cont.IsEmpty());  
 
     empty_cont.father->AbandonChild(empty_cont);
 
-    EraseNode_(empty_cont);
+    // EraseNode_(empty_cont);
 }
 
 void BvhTree::EraseNode_(const AABContainer& erasing_node)
 {
-    for (size_t i = 0; i < nodes_.size(); i++)
+    ASSERT_HANDLE(Assert());
+
+    RLSU_DUMP(erasing_node.Dump(), "erasing");
+
+    for (auto iterator = nodes_.begin(); iterator != nodes_.end(); iterator++)
     {
-        if (nodes_[i].get() == &erasing_node)
+        if (iterator->get() == &erasing_node)
         {
-            nodes_.erase(nodes_.begin() + i);
+            nodes_.erase(iterator);
+
+            RLSU_DUMP(Dump(),  "graph after er in cycl;e");
             return;
         }
     }
+
+    RLSU_DUMP(Dump(),  "graph after er");
+
+    RLSU_ERROR("Erasing node doesnt contains in nodes_");
 }
 
 

@@ -116,10 +116,10 @@ int main()
 
     std::vector<const Geometry::GeomObj*> objects;
     objects.push_back(tr1.get());
-    objects.push_back(tr2.get());
-    objects.push_back(tr3.get());
-    objects.push_back(tr4.get());
-    objects.push_back(tr5.get());
+    objects.push_back(tr1.get());
+    objects.push_back(tr1.get());
+    objects.push_back(tr1.get());
+    objects.push_back(tr1.get());
 
     try
     {

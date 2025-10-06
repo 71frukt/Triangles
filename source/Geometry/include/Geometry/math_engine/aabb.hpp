@@ -7,27 +7,44 @@
 
 namespace Geometry::MathEngine {
 
+class AABBox;    
 class AABContainer;
+
+using NodeList    = std::list<std::unique_ptr<const AABBox>>;
+using NodeConstIt = NodeList::const_iterator;
+
+enum NodeType
+{
+    AABBOX,
+    CONTAINER,
+    LEAF
+};
+
 
 class AABBox
 {
+friend class BvhTree;
+
 public:
-    AABBox(const Primitives::Point3& p0, const Primitives::Point3& p1, AABContainer* father_ptr)
+    AABBox(const Primitives::Point3& p0, const Primitives::Point3& p1, NodeConstIt father_it)
         : p0_(p0)
         , p1_(p1)
-        , father(father_ptr)
+        , father(father_it)
     {}
 
-    AABBox(const AABBox* father_ptr)
+    AABBox(NodeConstIt father_it)
         : p0_()
         , p1_()
-        , father(nullptr)
+        , father({})
     {}
 
-    AABBox() = default;
     virtual ~AABBox() = default;
 
-    AABContainer* father;
+    NodeConstIt father;
+
+    [[nodiscard]] virtual NodeType Type() const { return AABBOX; };
+
+    [[nodiscard]] bool NodeItIsValid(NodeConstIt it) const;
 
     [[nodiscard]] const Primitives::Point3& GetP0() const { return p0_; }
     [[nodiscard]] const Primitives::Point3& GetP1() const { return p1_; }
@@ -55,49 +72,56 @@ protected:
 };
 
 
-class AABLeaf : public AABBox
+class AABContainer : public AABBox
 {
+friend class BvhTree;
+
 public:
-    AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr);
-    AABLeaf(const GeomObj* const inscribed) : AABLeaf(inscribed, nullptr) {}
+    AABContainer(const std::list<NodeConstIt>& children_ref, NodeConstIt father_it);
+    AABContainer(NodeConstIt father_it);
+
+    [[nodiscard]] virtual NodeType Type() const override final { return CONTAINER; };
+
+    [[nodiscard]] const std::list<NodeConstIt>& GetChildren   () const { return children_; }
+
+    [[nodiscard]] size_t GetChildrenNum() const { return children_.size(); }
+    [[nodiscard]] bool   IsEmpty       () const { return children_.size() == 0; }
+    [[nodiscard]] bool   IsDegraded    () const { return children_.size() == 1; }
+    [[nodiscard]] bool   ContainsChild (NodeConstIt child_it) const;
+    [[nodiscard]] bool   NoVolume      () const;
+
+
+    void UpdateSizeAccordChild (NodeConstIt child_it         );
+    void AddChild              (NodeConstIt new_child_it     );
+    void AbandonChild          (NodeConstIt unwanted_child_it);
 
     virtual void Assert() const override;
 
 private:
-    const GeomObj* const inscribed_;
+    std::list<NodeConstIt> children_;
+
+    bool first_child_added_ = false;
+};
+
+
+class AABLeaf : public AABBox
+{
+friend class BvhTree;
+
+public:
+    AABLeaf(const GeomObj& inscribed, NodeConstIt father_ptr);
+    AABLeaf(const GeomObj& inscribed) : AABLeaf(inscribed, {}) {}
+
+    [[nodiscard]] virtual NodeType Type() const override final { return LEAF; };
+
+    virtual void Assert() const override;
+
+private:
+    const GeomObj& inscribed_;
 
     void BuildFromPoint_   ();
     void BuildFromLinesect_();
     void BuildFromTriangle_();
 };
-
-
-class AABContainer : public AABBox
-{
-public:
-    AABContainer(const std::list<AABBox*>& children_ref, const AABBox* father_ptr);
-    AABContainer(const AABContainer* father_ptr);
-    AABContainer() = default;
-
-    [[nodiscard]] const std::list<AABBox*>& GetChildren   () const { return children_; }
-    [[nodiscard]]       size_t              GetChildrenNum() const { return children_.size(); }
-    [[nodiscard]]       bool                IsEmpty       () const { return children_.size() == 0; }
-    [[nodiscard]]       bool                IsDegraded    () const { return children_.size() == 1; }
-    [[nodiscard]]       bool                ContainsChild (const AABBox& child) const;
-
-    void MoveChildFromOtherContainer(const std::list<AABBox*>::const_iterator& child_it, AABContainer* const other_cont);
-
-    void UpdateSizeAccordChild (const AABBox& child         );
-    void AddChild              (      AABBox& new_child     );
-    void AbandonChild          (      AABBox& unwanted_child);
-
-    virtual void Assert() const override;
-
-private:
-    std::list<AABBox*> children_;
-
-    bool first_child_added_ = false;
-};
-
 
 } // namespace Geometry::MathEngine

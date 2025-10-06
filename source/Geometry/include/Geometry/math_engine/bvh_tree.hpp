@@ -1,12 +1,10 @@
 #pragma once
 
 #include <cstddef>
-#include <iostream>
 #include <vector>
 #include "Geometry/common/geometry_obj.hpp"
 #include "Geometry/math_engine/aabb.hpp"
 #include "RLogSU/graph.hpp"
-#include <variant>
 
 namespace Geometry::MathEngine {
     
@@ -20,13 +18,17 @@ public:
     void Dump()   const;
 
 private:
-    std::vector<std::unique_ptr<AABBox>> nodes_;
+    std::list<std::unique_ptr<const AABBox>> nodes_;
     AABContainer* root_;
 
     size_t box_max_capa_;
 
+    void AdoptChildToFather(NodeConstIt father_it, NodeConstIt new_child_it);   // adds child to father and father to child
+    // void MoveChildToOtherContainer_(NodeConstIt child_it, NodeConstIt source_cont_it, NodeConstIt& target_cont_it);
+
     void BuildRootBox_();
     void SplitIntoBoxes_(AABContainer& cur_cont);
+    void CleanUp_(AABContainer& cont);
 
     void EraseNode_               (const AABContainer& erasing_node );
     void ResolveDegradedContainer_(      AABContainer& degraded_cont);

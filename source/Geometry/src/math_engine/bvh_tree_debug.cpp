@@ -14,7 +14,7 @@ void BvhTree::Assert() const
 
     for (const std::unique_ptr<AABBox>& node : nodes_)
     {
-        RLSU_ASSERT(node->father || node.get() == root_);
+        RLSU_ASSERT(node->father != nullptr || node.get() == root_);
         node->Assert();
     }
 }
@@ -61,15 +61,16 @@ void BvhTree::AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox
 {
     RLSU::Graphics::Graph::Node new_graph_node(&tree_node);
 
-    int node_id = -1;
-    for (int i = 0; i < nodes_.size(); i++)
+    int node_id = 0;
+
+    for (auto& node : nodes_)
     {
-        if (nodes_[i].get() == &tree_node)
-        {
-            node_id = i;
+        if (node.get() == &tree_node)
             break;
-        }
+
+        node_id++;
     }
+
 
     new_graph_node.SetLabel("{}\n"
                             "x: [{:.2f}, {:.2f}]\n"
