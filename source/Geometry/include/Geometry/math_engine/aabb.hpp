@@ -83,13 +83,13 @@ public:
     [[nodiscard]]       size_t              GetChildrenNum() const { return children_.size(); }
     [[nodiscard]]       bool                IsEmpty       () const { return children_.size() == 0; }
     [[nodiscard]]       bool                IsDegraded    () const { return children_.size() == 1; }
-    [[nodiscard]]       bool                ContainsChild (const AABBox& child) const;
+    [[nodiscard]]       bool                ContainsChild (const AABBox* child) const;
 
     void MoveChildFromOtherContainer(const std::list<AABBox*>::const_iterator& child_it, AABContainer* const other_cont);
 
-    void UpdateSizeAccordChild (const AABBox& child         );
-    void AddChild              (      AABBox& new_child     );
-    void AbandonChild          (      AABBox& unwanted_child);
+    void UpdateSizeAccordChild (const AABBox* child         );
+    void AddChild              (      AABBox* new_child     );
+    void AbandonChild          (      AABBox* unwanted_child);
 
     virtual void Assert() const override;
 

@@ -120,6 +120,8 @@ int main()
     objects.push_back(tr3.get());
     objects.push_back(tr4.get());
     objects.push_back(tr5.get());
+    objects.push_back(tr5.get());
+    objects.push_back(tr5.get());
 
     try
     {

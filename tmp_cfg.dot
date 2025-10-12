@@ -26,32 +26,50 @@ x: [9.00, 10.00]
 y: [19.00, 20.00]
 z: [0.00, 0.00]
 "]
-node_0x60b000000040[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "5
+node_0x6080000002a0[  shape     = "box", style     = filled, fillcolor = "skyblue", label     = "5
+x: [9.00, 10.00]
+y: [19.00, 20.00]
+z: [0.00, 0.00]
+"]
+node_0x608000000320[  shape     = "box", style     = filled, fillcolor = "skyblue", label     = "6
+x: [9.00, 10.00]
+y: [19.00, 20.00]
+z: [0.00, 0.00]
+"]
+node_0x60b000000040[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "7
 x: [-1.00, 9.00]
 y: [-1.00, 9.00]
 z: [0.00, 0.00]
 "]
-node_0x60b000000ca0[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "6
+node_0x60b0000009e0[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "8
 x: [-1.00, 11.00]
 y: [-1.00, 20.00]
 z: [0.00, 0.00]
 "]
-node_0x60b0000019b0[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "7
+node_0x60b000000930[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "9
+x: [9.00, 10.00]
+y: [19.00, 20.00]
+z: [0.00, 0.00]
+"]
+node_0x60b0000016f0[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "10
 x: [-1.00, 11.00]
 y: [-1.00, 9.00]
 z: [0.00, 0.00]
 "]
-node_0x60b000001900[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "8
+node_0x60b000001640[  shape     = "box3d", style     = filled, fillcolor = "aquamarine", label     = "11
 x: [9.00, 11.00]
 y: [-1.00, 1.00]
 z: [0.00, 0.00]
 "]
 node_0x60b000000040->node_0x608000000020
 node_0x60b000000040->node_0x6080000000a0
-node_0x60b000000ca0->node_0x60b0000019b0
-node_0x60b000000ca0->node_0x608000000220
-node_0x60b0000019b0->node_0x60b000000040
-node_0x60b0000019b0->node_0x60b000001900
-node_0x60b000001900->node_0x608000000120
-node_0x60b000001900->node_0x6080000001a0
+node_0x60b0000009e0->node_0x60b000000930
+node_0x60b0000009e0->node_0x60b0000016f0
+node_0x60b000000930->node_0x608000000220
+node_0x60b000000930->node_0x6080000002a0
+node_0x60b000000930->node_0x608000000320
+node_0x60b0000016f0->node_0x60b000000040
+node_0x60b0000016f0->node_0x60b000001640
+node_0x60b000001640->node_0x608000000120
+node_0x60b000001640->node_0x6080000001a0
 }

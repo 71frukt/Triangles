@@ -20,8 +20,6 @@ void AABContainer::Assert() const
 {
     AABBox::Assert();
 
-    RLSU_ASSERT(first_child_added_);
-
     for (auto child : children_)
     {
         // checking that the shape is at least PARTIALLY in the box

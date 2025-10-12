@@ -31,8 +31,16 @@ Primitives::Point3 AABBox::MinAxisPoint(const Primitives::Point3 &a, const Primi
 AABContainer::AABContainer(const std::list<AABBox*>& children_ref, const AABBox* father_ptr)
     : AABBox(father_ptr)
 {
+    if (children_ref.size() == 0)
+    {
+        p0_ = p1_ = {0, 0, 0};
+        return;
+    }
+
     for (AABBox* const adding_child : children_ref)
-        AddChild(*adding_child);
+    {
+        AddChild(adding_child);
+    }
 }
 
 
@@ -44,50 +52,54 @@ AABContainer::AABContainer(const AABContainer* father_ptr)
 
 void AABContainer::MoveChildFromOtherContainer(const std::list<AABBox*>::const_iterator& child_it, AABContainer* const other_cont)
 {
-    AABBox* child_ptr = *child_it;
+    AABBox* child = *child_it;
 
     this->children_.splice(this->children_.end(), other_cont->children_, child_it);
 
-    child_ptr->father = this;
+    child->father = this;
 
-    UpdateSizeAccordChild(*child_ptr);
+    UpdateSizeAccordChild(child);
 }
 
-void AABContainer::AddChild(AABBox& new_child)
+void AABContainer::AddChild(AABBox* new_child)
 {
-    children_.push_back(&new_child);
-    new_child.father = this;
+    RLSU_ASSERT(new_child);
+
+    children_.push_back(new_child);
+    new_child->father = this;
 
     UpdateSizeAccordChild(new_child);
 }
 
-void AABContainer::AbandonChild(AABBox& unwanted_child)
+void AABContainer::AbandonChild(AABBox* unwanted_child)
 {
+    RLSU_ASSERT(unwanted_child);
     RLSU_ASSERT(ContainsChild(unwanted_child));
 
-    std::list<AABBox*>::iterator unwanted_it = std::find(children_.begin(), children_.end(), &unwanted_child);
+    std::list<AABBox*>::iterator unwanted_it = std::find(children_.begin(), children_.end(), unwanted_child);
     children_.erase(unwanted_it);
 }
 
 
-void AABContainer::UpdateSizeAccordChild(const AABBox& child)
+void AABContainer::UpdateSizeAccordChild(const AABBox* child)
 {
+
     if (!first_child_added_)
     {
-        p0_ = child.GetP0();
-        p1_ = child.GetP1();
+        p0_ = child->GetP0();
+        p1_ = child->GetP1();
         first_child_added_ = true;
     }
 
     RLSU_ASSERT(ContainsChild(child));
 
-    this->SetP0(MinAxisPoint(this->GetP0(), child.GetP0()));
-    this->SetP1(MaxAxisPoint(this->GetP1(), child.GetP1()));
+    this->SetP0(MinAxisPoint(this->GetP0(), child->GetP0()));
+    this->SetP1(MaxAxisPoint(this->GetP1(), child->GetP1()));
 }
 
-bool AABContainer::ContainsChild(const AABBox& child) const
+bool AABContainer::ContainsChild(const AABBox* child) const
 {
-    return (std::find(children_.begin(), children_.end(), &child) != children_.end());
+    return (std::find(children_.begin(), children_.end(), child) != children_.end());
 }
 
 

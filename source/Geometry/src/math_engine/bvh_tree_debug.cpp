@@ -1,3 +1,4 @@
+#include "Geometry/math_engine/aabb.hpp"
 #include "RLogSU/graph.hpp"
 #include "RLogSU/graph_appearance.hpp"
 
@@ -12,9 +13,9 @@ void BvhTree::Assert() const
     RLSU_ASSERT(root_);
     RLSU_ASSERT(typeid(*root_) == typeid(AABContainer));
 
-    for (const std::unique_ptr<AABBox>& node : nodes_)
+    for (const AABBox* node : nodes_)
     {
-        RLSU_ASSERT(node->father || node.get() == root_);
+        RLSU_ASSERT(node->father || node == root_);
         node->Assert();
     }
 }
@@ -23,14 +24,14 @@ void BvhTree::Dump() const
 {
     RLSU::Graphics::Graph graph;
 
-    for (const std::unique_ptr<AABBox>& node : nodes_)
+    for (const AABBox* node : nodes_)
     {
-        AddConfiduredGraphNode_(graph, *node);
+        AddConfiduredGraphNode_(graph, node);
     }
 
-    for (const std::unique_ptr<AABBox>& node : nodes_)
+    for (const AABBox* node : nodes_)
     {
-        AddNodeEdges_(graph, *node);
+        AddNodeEdges_(graph, node);
     }
 
     graph.LogGraph();
@@ -42,33 +43,33 @@ void BvhTree::Dump() const
     // }
 }
 
-void BvhTree::AddNodeEdges_(RLSU::Graphics::Graph& graph, const AABBox& tree_node) const
+void BvhTree::AddNodeEdges_(RLSU::Graphics::Graph& graph, const AABBox* tree_node) const
 {
-    if (typeid(tree_node) == typeid(AABContainer))
+    if (typeid(*tree_node) == typeid(AABContainer))
     {
-        const AABContainer& container = static_cast<const AABContainer&>(tree_node);
+        const AABContainer* container = static_cast<const AABContainer*>(tree_node);
         
-        for (const AABBox* child_node_ptr : container.GetChildren())
+        for (const AABBox* child_node_ptr : container->GetChildren())
         {
             RLSU_ASSERT(child_node_ptr);
 
-            graph.AddEdge(&tree_node, child_node_ptr);
+            graph.AddEdge(tree_node, child_node_ptr);
         }
     }
 }
 
-void BvhTree::AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox& tree_node) const
+void BvhTree::AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox* tree_node) const
 {
-    RLSU::Graphics::Graph::Node new_graph_node(&tree_node);
+    RLSU::Graphics::Graph::Node new_graph_node(tree_node);
 
-    int node_id = -1;
-    for (int i = 0; i < nodes_.size(); i++)
+    int node_id = 0;
+
+    for (const AABBox* node : nodes_)
     {
-        if (nodes_[i].get() == &tree_node)
-        {
-            node_id = i;
+        if (node == tree_node)
             break;
-        }
+
+        node_id++;
     }
 
     new_graph_node.SetLabel("{}\n"
@@ -77,18 +78,18 @@ void BvhTree::AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox
                             "z: [{:.2f}, {:.2f}]\n",
         
                             node_id,
-                            tree_node.GetP0().GetX(), tree_node.GetP1().GetX(),
-                            tree_node.GetP0().GetY(), tree_node.GetP1().GetY(),
-                            tree_node.GetP0().GetZ(), tree_node.GetP1().GetZ()
+                            tree_node->GetP0().GetX(), tree_node->GetP1().GetX(),
+                            tree_node->GetP0().GetY(), tree_node->GetP1().GetY(),
+                            tree_node->GetP0().GetZ(), tree_node->GetP1().GetZ()
                         );
 
-    if (typeid(tree_node) == typeid(AABContainer))
+    if (typeid(*tree_node) == typeid(AABContainer))
     {
         new_graph_node.SetShape(RLSU::Graphics::Shapes::BOX3D);
         new_graph_node.SetColor(RLSU::Graphics::Colors::AQUAMARINE);
     }
 
-    else if (typeid(tree_node) == typeid(AABLeaf))
+    else if (typeid(*tree_node) == typeid(AABLeaf))
     {
         new_graph_node.SetShape(RLSU::Graphics::Shapes::BOX);
         new_graph_node.SetColor(RLSU::Graphics::Colors::SKYBLUE);

@@ -1,3 +1,4 @@
+#include "Geometry/common/geometry_obj.hpp"
 #include "Geometry/math/double_handle.hpp"
 #include "Geometry/math/vector3.hpp"
 #include "Geometry/primitives/primitives.hpp"
@@ -9,8 +10,8 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <memory>
 #include <functional>
+#include <vector>
 
 namespace Geometry::MathEngine {
 
@@ -22,17 +23,29 @@ BvhTree::BvhTree(const std::vector<const GeomObj*>& objects, const size_t box_ma
     {
         ASSERT_HANDLE(objects[i]->Assert());
 
-        nodes_.emplace_back(std::make_unique<AABLeaf>(objects[i]));
+        AABLeaf* new_leaf = new AABLeaf(objects[i]); 
+
+        nodes_.push_back(new_leaf);
     }
 
     ERROR_HANDLE(BuildRootBox_());
-    RLSU_ASSERT(root_);
-    RLSU_DUMP(root_->Dump(), "root");
-    RLSU_DUMP(Dump(), "starit leafs");
 
-    ERROR_HANDLE(SplitIntoBoxes_(*root_));
+    RLSU_ASSERT(root_);
+    RLSU_DUMP(Dump(), "build_root");
+
+    ERROR_HANDLE(SplitIntoBoxes_(root_));
 
     ASSERT_HANDLE(Assert());
+}
+
+BvhTree::~BvhTree()
+{
+    for (AABBox* node : nodes_)
+    {
+        delete node;
+    }
+
+    root_ = nullptr;
 }
 
 
@@ -40,41 +53,39 @@ void BvhTree::BuildRootBox_()
 {
     std::list<AABBox*> all_children;
 
-    for (size_t i = 0; i < nodes_.size(); i++)
+    for (AABBox* node : nodes_)
     {
-        all_children.push_back(nodes_[i].get());
+        all_children.push_back(node);
     }
 
-    auto root = ERROR_HANDLE(std::make_unique<AABContainer>(std::move(all_children), nullptr));
-    nodes_.push_back(std::move(root));
-
-    root_ = static_cast<AABContainer*>(nodes_.back().get());
+    root_ = new AABContainer(std::move(all_children), nullptr);
+    nodes_.push_back(root_);
 }
 
 
-void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
+void BvhTree::SplitIntoBoxes_(AABContainer* cur_cont)
 {
-    RLSU_ASSERT(typeid(cur_cont) == typeid(AABContainer));
+    RLSU_ASSERT(cur_cont);
     RLSU_DUMP(Dump());
     ASSERT_HANDLE(Assert());
 
-    if (cur_cont.GetChildrenNum() <= box_max_capa_)
+    if (cur_cont->GetChildrenNum() <= box_max_capa_)
     {
         return;
     }
 
-    Math::Vector3 diagonal = cur_cont.GetP1() - cur_cont.GetP0();
+    Math::Vector3 diagonal = cur_cont->GetP1() - cur_cont->GetP0();
     double max_side = std::max({diagonal.GetX(), diagonal.GetY(), diagonal.GetZ()});
 
 
     std::function<int(Primitives::Point3, Primitives::Point3)> CompareAxis;
-    Primitives::Point3 check_point = cur_cont.GetP1();
+    Primitives::Point3 check_point = cur_cont->GetP1();
 
     enum changing_axisT { X, Y, Z } changing_axis;
 
     if (Math::DoubleEq(max_side, diagonal.GetX()))
     {
-        check_point.SetX(cur_cont.GetP0().GetX() + max_side / 2);
+        check_point.SetX(cur_cont->GetP0().GetX() + max_side / 2);
 
         CompareAxis = Primitives::Point3::CompareX;
         changing_axis = changing_axisT::X;
@@ -82,7 +93,7 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
 
     else if (Math::DoubleEq(max_side, diagonal.GetY()))
     {
-        check_point.SetY(cur_cont.GetP0().GetY() + max_side / 2);
+        check_point.SetY(cur_cont->GetP0().GetY() + max_side / 2);
 
         CompareAxis = Primitives::Point3::CompareY;
         changing_axis = changing_axisT::Y;
@@ -90,7 +101,7 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
 
     else if (Math::DoubleEq(max_side, diagonal.GetZ()))
     {
-        check_point.SetZ(cur_cont.GetP0().GetZ() + max_side / 2);
+        check_point.SetZ(cur_cont->GetP0().GetZ() + max_side / 2);
 
         CompareAxis = Primitives::Point3::CompareZ;
         changing_axis = changing_axisT::Z;
@@ -101,9 +112,9 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
 
     RLSU_DUMP(check_point.Dump("check_point!"));
 
-    std::unique_ptr<AABContainer> sub_cont = std::make_unique<AABContainer>();
+    AABContainer* sub_cont = new AABContainer();
     
-    for (auto child_it = cur_cont.GetChildren().begin(); child_it != cur_cont.GetChildren().end(); /*-*/ )
+    for (auto child_it = cur_cont->GetChildren().begin(); child_it != cur_cont->GetChildren().end(); /*-*/ )
     {
         const AABBox* const child = *child_it;
 
@@ -112,7 +123,7 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
         {
             auto child_it_cpy = child_it++;
             
-            ERROR_HANDLE(sub_cont->MoveChildFromOtherContainer(child_it_cpy, &cur_cont));
+            ERROR_HANDLE(sub_cont->MoveChildFromOtherContainer(child_it_cpy, cur_cont));
 
             continue;
         }
@@ -122,88 +133,89 @@ void BvhTree::SplitIntoBoxes_(AABContainer& cur_cont)
 
     switch(changing_axis)
     {
-    case X : cur_cont.SetP1_X(sub_cont->GetP0().GetX() + Math::CmpEps);  break;
-    case Y : cur_cont.SetP1_Y(sub_cont->GetP0().GetY() + Math::CmpEps);  break;
-    case Z : cur_cont.SetP1_Z(sub_cont->GetP0().GetZ() + Math::CmpEps);  break;
+    case X : cur_cont->SetP1_X(sub_cont->GetP0().GetX() + Math::CmpEps);  break;
+    case Y : cur_cont->SetP1_Y(sub_cont->GetP0().GetY() + Math::CmpEps);  break;
+    case Z : cur_cont->SetP1_Z(sub_cont->GetP0().GetZ() + Math::CmpEps);  break;
 
     default: RLSU_ERROR("invalid changing_axis = {}", changing_axis);
     }
 
     if (sub_cont->IsEmpty())
     {
-        cur_cont.SetP1(check_point);
-        SplitIntoBoxes_( cur_cont);
+        cur_cont->SetP1(check_point);
+        SplitIntoBoxes_(cur_cont);
+
+        delete sub_cont;
         return;
     }
 
-    std::unique_ptr<AABContainer> new_father = std::make_unique<AABContainer>();
-
-
-    AABContainer* new_father_ptr = new_father.get();
-    AABContainer* sub_cont_ptr   = sub_cont  .get();
-
-    nodes_.push_back(std::move(new_father));
-    nodes_.push_back(std::move(sub_cont));
-
+    AABContainer *new_father = new AABContainer();
+    nodes_.push_back(new_father);
     
-    if (&cur_cont != root_)
+    nodes_.push_back(sub_cont);
+    
+    if (cur_cont != root_)
     {
-        AABContainer* cur_cont_father = cur_cont.father;
+        AABContainer* cur_cont_father = cur_cont->father;
+        RLSU_ASSERT(cur_cont_father);
 
         ERROR_HANDLE(cur_cont_father->AbandonChild(cur_cont));
-        ERROR_HANDLE(cur_cont_father->AddChild(*new_father_ptr));
+        ERROR_HANDLE(cur_cont_father->AddChild(new_father));
     }
     
     else
-        root_ = new_father_ptr;
+        root_ = new_father;
 
 
-    ERROR_HANDLE(new_father_ptr->AddChild( cur_cont      ));
-    ERROR_HANDLE(new_father_ptr->AddChild(*sub_cont_ptr  ));
+    ERROR_HANDLE(new_father->AddChild(cur_cont));
+    ERROR_HANDLE(new_father->AddChild(sub_cont));
 
-    ERROR_HANDLE(SplitIntoBoxes_( cur_cont));
-    ERROR_HANDLE(SplitIntoBoxes_(*sub_cont_ptr));
+    ERROR_HANDLE(SplitIntoBoxes_(cur_cont));
+    ERROR_HANDLE(SplitIntoBoxes_(sub_cont));
 
-    if (cur_cont.IsDegraded())
+    if (cur_cont->IsDegraded())
         ResolveDegradedContainer_(cur_cont);
 
-    if (sub_cont_ptr->IsDegraded())
-        ResolveDegradedContainer_(*sub_cont_ptr);
+    if (sub_cont->IsDegraded())
+        ResolveDegradedContainer_(sub_cont);
 
-    if (cur_cont.IsEmpty())
+    if (cur_cont->IsEmpty())
         ResolveEmptyContainer_(cur_cont);
 
-    if (sub_cont_ptr->IsEmpty())
-        ResolveEmptyContainer_(*sub_cont_ptr);
+    if (sub_cont->IsEmpty())
+        ResolveEmptyContainer_(sub_cont);
 }
 
 
-void BvhTree::ResolveDegradedContainer_(AABContainer& degraded_cont)
+void BvhTree::ResolveDegradedContainer_(AABContainer* degraded_cont)
 {
-    RLSU_ASSERT(degraded_cont.IsDegraded());
+    RLSU_ASSERT(degraded_cont->IsDegraded());
 
-    degraded_cont.father->AddChild(*degraded_cont.GetChildren().front());
-    degraded_cont.father->AbandonChild(degraded_cont);
+    degraded_cont->father->AddChild(degraded_cont->GetChildren().front());
+    degraded_cont->father->AbandonChild(degraded_cont);
 
     EraseNode_(degraded_cont);
 }
 
-void BvhTree::ResolveEmptyContainer_(AABContainer& empty_cont)
+void BvhTree::ResolveEmptyContainer_(AABContainer* empty_cont)
 {
-    RLSU_ASSERT(empty_cont.IsEmpty());  
+    RLSU_ASSERT(empty_cont->IsEmpty());  
 
-    empty_cont.father->AbandonChild(empty_cont);
+    empty_cont->father->AbandonChild(empty_cont);
 
     EraseNode_(empty_cont);
 }
 
-void BvhTree::EraseNode_(const AABContainer& erasing_node)
+void BvhTree::EraseNode_(const AABContainer* erasing_node)
 {
-    for (size_t i = 0; i < nodes_.size(); i++)
+    for (auto iterator = nodes_.begin(); iterator != nodes_.end(); iterator++)
     {
-        if (nodes_[i].get() == &erasing_node)
+        if (*iterator == erasing_node)
         {
-            nodes_.erase(nodes_.begin() + i);
+            AABBox* node = *iterator;
+            delete node;
+
+            nodes_.erase(iterator);
             return;
         }
     }
