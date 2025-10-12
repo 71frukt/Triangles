@@ -13,7 +13,7 @@ void AABBox::Assert() const
 void AABLeaf::Assert() const
 {
     AABBox::Assert();
-    inscribed_->Assert();
+    inscribed->Assert();
 }
 
 void AABContainer::Assert() const

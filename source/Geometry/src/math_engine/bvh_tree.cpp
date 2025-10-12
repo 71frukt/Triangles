@@ -1,6 +1,7 @@
 #include "Geometry/common/geometry_obj.hpp"
 #include "Geometry/math/double_handle.hpp"
 #include "Geometry/math/vector3.hpp"
+#include "Geometry/math_engine/collision_handler.hpp"
 #include "Geometry/primitives/primitives.hpp"
 #include "Geometry/math_engine/bvh_tree.hpp"
 #include "Geometry/math_engine/aabb.hpp"
@@ -11,6 +12,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <iterator>
 #include <vector>
 
 namespace Geometry::MathEngine {
@@ -23,7 +25,7 @@ BvhTree::BvhTree(const std::vector<const GeomObj*>& objects, const size_t box_ma
     {
         ASSERT_HANDLE(objects[i]->Assert());
 
-        AABLeaf* new_leaf = new AABLeaf(objects[i]); 
+        AABLeaf* new_leaf = new AABLeaf(objects[i], i); 
 
         nodes_.push_back(new_leaf);
     }
@@ -221,5 +223,58 @@ void BvhTree::EraseNode_(const AABContainer* erasing_node)
     }
 }
 
+
+std::vector<std::vector<bool>> BvhTree::GetIntersections() const
+{
+    size_t res_table_max_sz = nodes_.size();
+
+    std::vector<std::vector<bool>> res_table(res_table_max_sz, std::vector<bool>(res_table_max_sz, false));
+
+    for (size_t i = 0; i < res_table_max_sz; i++)
+        res_table[i][i] = true;
+
+    GetIntersectionsInContainer_(res_table, root_);
+
+    return std::move(res_table);
+}
+
+void BvhTree::GetIntersectionsInContainer_(std::vector<std::vector<bool>>& res_table, const AABContainer* cont) const
+{
+    RLSU_ASSERT(cont);
+    RLSU_ASSERT(typeid(*cont) == typeid(AABContainer));
+
+    const auto& children = cont->GetChildren();
+    size_t children_num  = cont->GetChildren().size();
+
+    for (auto it_1 = children.begin(); it_1 != children.end(); it_1++)
+    {
+        const AABBox* child_1 = *it_1;
+
+        if (typeid(*child_1) == typeid(AABContainer))
+            GetIntersectionsInContainer_(res_table, static_cast<const AABContainer*>(child_1));
+
+        if (typeid(*child_1) != typeid(AABLeaf))
+            continue;
+
+        const AABLeaf* leaf_1 = static_cast<const AABLeaf*>(child_1);
+
+        for (auto it_2 = std::next(it_1); it_2 != children.end(); it_2++)
+        {
+            const AABBox* child_2 = *it_2;
+            if (typeid(*child_2) != typeid(AABLeaf))
+                continue;
+
+            const AABLeaf* leaf_2 = static_cast<const AABLeaf*>(child_2);
+
+            Geometry::MathEngine::CollisionCodeT coll_code = ERROR_HANDLE(Geometry::MathEngine::Interact(*leaf_1->inscribed, *leaf_2->inscribed)->CollisionCode());
+            
+            if (coll_code != Geometry::MathEngine::NOTHING)
+            {
+                res_table.at(leaf_1->id).at(leaf_2->id) = true;
+                res_table.at(leaf_2->id).at(leaf_1->id) = true;                
+            }
+        }
+    }
+}
 
 } // namespace Geometry::MathEngine

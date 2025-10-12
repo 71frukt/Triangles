@@ -9,6 +9,13 @@ namespace Geometry::MathEngine {
 
 class AABContainer;
 
+// enum NodeType        // TODO
+// {
+//     AABBOX,
+//     AABLEAF,
+//     AABCONTAINER
+// };
+
 class AABBox
 {
 public:
@@ -58,13 +65,16 @@ protected:
 class AABLeaf : public AABBox
 {
 public:
-    AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr);
-    AABLeaf(const GeomObj* const inscribed) : AABLeaf(inscribed, nullptr) {}
+    AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr, int leaf_id);
+    AABLeaf(const GeomObj* const inscribed, int id) : AABLeaf(inscribed, nullptr, id) {}
 
+    const GeomObj* const inscribed;
+    
     virtual void Assert() const override;
 
+    const int id;
+
 private:
-    const GeomObj* const inscribed_;
 
     void BuildFromPoint_   ();
     void BuildFromLinesect_();

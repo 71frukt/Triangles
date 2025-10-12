@@ -12,6 +12,7 @@
 #include <iostream>
 #include <ostream>
 #include <stdexcept>
+#include <vector>
 
 
 #include "RLogSU/graph.hpp"
@@ -89,9 +90,9 @@ int main()
 
 
     Geometry::GeomObjUniqPtr tr1 =  
-        Geometry::Shapes::Triangle3::BuildGeomObj({0, 0, 0}, 
-                                                  {1, 0, 0}, 
-                                                  {0, 1, 0});
+        Geometry::Shapes::Triangle3::BuildGeomObj({0, 0, 1000}, 
+                                                  {1, 0, 1000}, 
+                                                  {0, 1, 1000});
     
     Geometry::GeomObjUniqPtr tr2 =  
         Geometry::Shapes::Triangle3::BuildGeomObj({ 0,  0, 0}, 
@@ -120,14 +121,38 @@ int main()
     objects.push_back(tr3.get());
     objects.push_back(tr4.get());
     objects.push_back(tr5.get());
-    objects.push_back(tr5.get());
-    objects.push_back(tr5.get());
 
     try
     {
         Geometry::MathEngine::BvhTree bvh_tree(objects);
 
         RLSU_DUMP(bvh_tree.Dump());
+
+        std::vector<std::vector<bool>> table = bvh_tree.GetIntersections();
+
+        std::cout << "--------RESULT--------" << std::endl;
+
+        for (size_t i = 0; i < table.size(); i++)
+        {
+            bool crosses = false;
+
+            for (size_t j = 0; j < table.size(); j++)
+            {
+                if (i == j)
+                    continue;
+                
+                if (table[i][j] == true)
+                {
+                    crosses = true;
+                    break;
+                }
+            }
+
+            if (crosses)
+                std::cout << i << " ";
+        }
+
+        std::cout << std::endl;
     }
     catch(std::runtime_error a)
     {

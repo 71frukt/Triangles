@@ -17,6 +17,8 @@ public:
     BvhTree(const std::vector<const GeomObj*>& objects, const size_t box_max_capa = 3);
     ~BvhTree();
 
+    [[nodiscard]] std::vector<std::vector<bool>> GetIntersections() const;
+
     void Assert() const;
     void Dump()   const;
 
@@ -33,8 +35,13 @@ private:
     void ResolveDegradedContainer_(      AABContainer* degraded_cont);
     void ResolveEmptyContainer_   (      AABContainer* empty_cont   );
 
+    void GetIntersectionsInContainer_(std::vector<std::vector<bool>>& res_table, const AABContainer* cont) const;
+
+    //----------debug-------------------------------------------------------------------------
     void AddNodeEdges_          (RLSU::Graphics::Graph& graph, const AABBox* node_tree) const;
     void AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox* tree_node) const;
+    //----------------------------------------------------------------------------------------
+
 };
 
 

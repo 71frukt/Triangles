@@ -103,27 +103,28 @@ bool AABContainer::ContainsChild(const AABBox* child) const
 }
 
 
-AABLeaf::AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr)
+AABLeaf::AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr, int leaf_id)
     : AABBox(father_ptr)
-    , inscribed_(inscribed)
+    , inscribed(inscribed)
+    , id(leaf_id)
 {
     ASSERT_HANDLE(inscribed->Assert());
 
-    switch (inscribed_->WhoAmI()) {
+    switch (inscribed->WhoAmI()) {
         case POINT3    : ERROR_HANDLE(BuildFromPoint_   ());  break;
         case LINESECT3 : ERROR_HANDLE(BuildFromLinesect_());  break;
         case TRIANGLE3 : ERROR_HANDLE(BuildFromTriangle_());  break;
         
-        default        : RLSU_ERROR("invalid owner type = '{}'", ObjTypeStr(inscribed_->WhoAmI()));        
+        default        : RLSU_ERROR("invalid owner type = '{}'", ObjTypeStr(inscribed->WhoAmI()));        
     }
 }
 
 
 void AABLeaf::BuildFromPoint_()
 {
-    RLSU_ASSERT(inscribed_->WhoAmI() == POINT3);
+    RLSU_ASSERT(inscribed->WhoAmI() == POINT3);
 
-    auto inscribed_point = static_cast<const Geometry::Primitives::Point3* const>(inscribed_);
+    auto inscribed_point = static_cast<const Geometry::Primitives::Point3* const>(inscribed);
 
     p0_.SetX(inscribed_point->GetX() - Math::CmpEps);
     p0_.SetY(inscribed_point->GetY() - Math::CmpEps);
@@ -139,9 +140,9 @@ void AABLeaf::BuildFromLinesect_()
 {
     RLSU_WARNING("building from linesect~~!!");
 
-    RLSU_ASSERT(inscribed_->WhoAmI() == LINESECT3);
+    RLSU_ASSERT(inscribed->WhoAmI() == LINESECT3);
 
-    auto inscribed_linesect = static_cast<const Geometry::Shapes::Linesect3* const>(inscribed_);
+    auto inscribed_linesect = static_cast<const Geometry::Shapes::Linesect3* const>(inscribed);
     
     double x0_ = std::min(inscribed_linesect->GetPoint1().GetX(), inscribed_linesect->GetPoint2().GetX());
     double x1_ = std::max(inscribed_linesect->GetPoint1().GetX(), inscribed_linesect->GetPoint2().GetX());
@@ -164,9 +165,9 @@ void AABLeaf::BuildFromLinesect_()
 
 void AABLeaf::BuildFromTriangle_()
 {
-    RLSU_ASSERT(inscribed_->WhoAmI() == TRIANGLE3);
+    RLSU_ASSERT(inscribed->WhoAmI() == TRIANGLE3);
     
-    auto inscribed_triangle = static_cast<const Geometry::Shapes::Triangle3* const>(inscribed_);
+    auto inscribed_triangle = static_cast<const Geometry::Shapes::Triangle3* const>(inscribed);
 
     double tr_x1 = inscribed_triangle->GetPoint1().GetX();
     double tr_x2 = inscribed_triangle->GetPoint2().GetX();
