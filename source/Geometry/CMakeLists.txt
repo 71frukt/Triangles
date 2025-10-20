@@ -37,8 +37,13 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE MODULE_NAME="${PROJECT_NAME}"
 
 if(DEBUG_MODE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG_MODE)
-
     message(STATUS "${PROJECT_NAME}: DEBUG_MODE ENABLED")
+
+    target_compile_options(Geometry PRIVATE
+        -g
+        -O0
+    )
+
 
 else()
 

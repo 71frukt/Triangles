@@ -41,6 +41,11 @@ Vector3 Vector3::operator* (double scalar) const
     return Vector3(x_ * scalar, y_ * scalar, z_ * scalar);
 }
 
+Vector3 operator*(double scalar, const Vector3& vector) 
+{
+    return Vector3(scalar * vector.GetX(), scalar * vector.GetY(), scalar * vector.GetZ());
+}
+
 Vector3 Vector3::operator/ (double scalar) const 
 {
     RLSU_ASSERT(scalar != 0);
@@ -92,8 +97,8 @@ void Vector3::Dump(const std::string& name) const
     RLSU_LOG("'{}' [{}] {{\n", name, static_cast<const void*>(this));
     RLSU_BASETAB_INCREACE;
 
-    RLSU_LOG("({:.2g}, {:.2g}, {:.2g})\n", GetX(), GetY(), GetZ());
-    RLSU_LOG("length = {:.2g}\n", GetLen());
+    RLSU_LOG("({:.5g}, {:.5g}, {:.5g})\n", GetX(), GetY(), GetZ());
+    RLSU_LOG("length = {:.5g}\n", GetLen());
     
     RLSU_BASETAB_DECREACE;
     RLSU_LOG("}}\n");

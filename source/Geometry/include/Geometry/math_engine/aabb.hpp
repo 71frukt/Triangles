@@ -9,13 +9,6 @@ namespace Geometry::MathEngine {
 
 class AABContainer;
 
-// enum NodeType        // TODO
-// {
-//     AABBOX,
-//     AABLEAF,
-//     AABCONTAINER
-// };
-
 class AABBox
 {
 public:
@@ -23,15 +16,15 @@ public:
         : p0_(p0)
         , p1_(p1)
         , father(father_ptr)
-    {}
+    {
+        static size_t nodes_counter = 0;
+        id_ = nodes_counter++;
+    }
 
-    AABBox(const AABBox* father_ptr)
-        : p0_()
-        , p1_()
-        , father(nullptr)
-    {}
+    AABBox(AABContainer* father_ptr) : AABBox({}, {}, father_ptr) {}
 
-    AABBox() = default;
+    AABBox() : AABBox(nullptr) {}
+
     virtual ~AABBox() = default;
 
     AABContainer* father;
@@ -56,23 +49,32 @@ public:
     virtual void Assert() const;
             void Dump  () const;
 
+    [[nodiscard]] size_t GetId() const { return id_; }
+
 protected:
     Primitives::Point3 p0_;     // back  left  down
     Primitives::Point3 p1_;     // front right up
+            
+    size_t id_;
 };
 
 
 class AABLeaf : public AABBox
 {
 public:
-    AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr, int leaf_id);
-    AABLeaf(const GeomObj* const inscribed, int id) : AABLeaf(inscribed, nullptr, id) {}
+    AABLeaf(const GeomObj* const inscribed, AABContainer* father_ptr);
+    AABLeaf(const GeomObj* const inscribed) : AABLeaf(inscribed, nullptr) {}
+
+    AABLeaf(const AABLeaf& source)
+        : AABLeaf(source.inscribed, source.father)
+    {
+        id_ = source.id_;
+    }
+
 
     const GeomObj* const inscribed;
     
     virtual void Assert() const override;
-
-    const int id;
 
 private:
 
@@ -85,14 +87,13 @@ private:
 class AABContainer : public AABBox
 {
 public:
-    AABContainer(const std::list<AABBox*>& children_ref, const AABBox* father_ptr);
-    AABContainer(const AABContainer* father_ptr);
+    AABContainer(const std::list<AABBox*>& children_ref, AABContainer* father_ptr);
+    AABContainer(AABContainer* father_ptr);
     AABContainer() = default;
 
-    [[nodiscard]] const std::list<AABBox*>& GetChildren   () const { return children_; }
-    [[nodiscard]]       size_t              GetChildrenNum() const { return children_.size(); }
-    [[nodiscard]]       bool                IsEmpty       () const { return children_.size() == 0; }
-    [[nodiscard]]       bool                IsDegraded    () const { return children_.size() == 1; }
+    [[nodiscard]]       size_t              GetChildrenNum() const { return children.size(); }
+    [[nodiscard]]       bool                IsEmpty       () const { return children.size() == 0; }
+    [[nodiscard]]       bool                IsDegraded    () const { return children.size() == 1; }
     [[nodiscard]]       bool                ContainsChild (const AABBox* child) const;
 
     void MoveChildFromOtherContainer(const std::list<AABBox*>::const_iterator& child_it, AABContainer* const other_cont);
@@ -103,8 +104,8 @@ public:
 
     virtual void Assert() const override;
 
+    std::list<AABBox*> children;
 private:
-    std::list<AABBox*> children_;
 
     bool first_child_added_ = false;
 };

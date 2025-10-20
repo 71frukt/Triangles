@@ -1,4 +1,5 @@
 #include "Geometry/math_engine/aabb.hpp"
+#include "RLogSU/logger.hpp"
 
 namespace Geometry::MathEngine {
 
@@ -20,7 +21,7 @@ void AABContainer::Assert() const
 {
     AABBox::Assert();
 
-    for (auto child : children_)
+    for (auto child : children)
     {
         // checking that the shape is at least PARTIALLY in the box
 
@@ -37,17 +38,19 @@ void AABContainer::Assert() const
 void AABBox::Dump() const
 {
     if (typeid(*this) == typeid(AABContainer))
-        RLSU_LOG("AABContainer:\n");
+        RLSU_LOG("AABContainer");
 
     else if (typeid(*this) == typeid(AABLeaf))
-        RLSU_LOG("AABLeaf:\n");
+        RLSU_LOG("AABLeaf");
 
     else
-        RLSU_LOG("Invalid AABBox:\n");
+        RLSU_LOG("Invalid AABBox");
 
-    RLSU_LOG("\tx: [{:.2f}, {:.2f}] \n"
-                     "\ty: [{:.2f}, {:.2f}] \n"
-                     "\tz: [{:.2f}, {:.2f}] \n\n",
+    RLSU_LOG("{}:\n", id_);
+
+    RLSU_LOG("\tx: [{:.5g}, {:.5g}] \n"
+                     "\ty: [{:.5g}, {:.5g}] \n"
+                     "\tz: [{:.5g}, {:.5g}] \n\n",
         
                 GetP0().GetX(), GetP1().GetX(),
                 GetP0().GetY(), GetP1().GetY(),

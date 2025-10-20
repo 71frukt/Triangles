@@ -28,7 +28,7 @@ Primitives::Point3 AABBox::MinAxisPoint(const Primitives::Point3 &a, const Primi
 }
 
 
-AABContainer::AABContainer(const std::list<AABBox*>& children_ref, const AABBox* father_ptr)
+AABContainer::AABContainer(const std::list<AABBox*>& children_ref, AABContainer* father_ptr)
     : AABBox(father_ptr)
 {
     if (children_ref.size() == 0)
@@ -44,9 +44,9 @@ AABContainer::AABContainer(const std::list<AABBox*>& children_ref, const AABBox*
 }
 
 
-AABContainer::AABContainer(const AABContainer* father_ptr)
+AABContainer::AABContainer(AABContainer* father_ptr)
     : AABBox(father_ptr)
-    , children_()
+    , children()
 {}
 
 
@@ -54,7 +54,7 @@ void AABContainer::MoveChildFromOtherContainer(const std::list<AABBox*>::const_i
 {
     AABBox* child = *child_it;
 
-    this->children_.splice(this->children_.end(), other_cont->children_, child_it);
+    this->children.splice(this->children.end(), other_cont->children, child_it);
 
     child->father = this;
 
@@ -65,7 +65,7 @@ void AABContainer::AddChild(AABBox* new_child)
 {
     RLSU_ASSERT(new_child);
 
-    children_.push_back(new_child);
+    children.push_back(new_child);
     new_child->father = this;
 
     UpdateSizeAccordChild(new_child);
@@ -74,16 +74,17 @@ void AABContainer::AddChild(AABBox* new_child)
 void AABContainer::AbandonChild(AABBox* unwanted_child)
 {
     RLSU_ASSERT(unwanted_child);
-    RLSU_ASSERT(ContainsChild(unwanted_child));
+    RLSU_ASSERT(ContainsChild(unwanted_child), "unwanted_child.id = {}", unwanted_child->GetId());
 
-    std::list<AABBox*>::iterator unwanted_it = std::find(children_.begin(), children_.end(), unwanted_child);
-    children_.erase(unwanted_it);
+    RLSU_INFO("Abanding {}", unwanted_child->GetId());
+
+    std::list<AABBox*>::iterator unwanted_it = std::find(children.begin(), children.end(), unwanted_child);
+    children.erase(unwanted_it);
 }
 
 
 void AABContainer::UpdateSizeAccordChild(const AABBox* child)
 {
-
     if (!first_child_added_)
     {
         p0_ = child->GetP0();
@@ -99,14 +100,14 @@ void AABContainer::UpdateSizeAccordChild(const AABBox* child)
 
 bool AABContainer::ContainsChild(const AABBox* child) const
 {
-    return (std::find(children_.begin(), children_.end(), child) != children_.end());
+    RLSU_ASSERT(child);
+    return (std::find(children.begin(), children.end(), child) != children.end());
 }
 
 
-AABLeaf::AABLeaf(const GeomObj* const inscribed, const AABBox* father_ptr, int leaf_id)
+AABLeaf::AABLeaf(const GeomObj* const inscribed, AABContainer* father_ptr)
     : AABBox(father_ptr)
     , inscribed(inscribed)
-    , id(leaf_id)
 {
     ASSERT_HANDLE(inscribed->Assert());
 
@@ -138,8 +139,6 @@ void AABLeaf::BuildFromPoint_()
 
 void AABLeaf::BuildFromLinesect_()
 {
-    RLSU_WARNING("building from linesect~~!!");
-
     RLSU_ASSERT(inscribed->WhoAmI() == LINESECT3);
 
     auto inscribed_linesect = static_cast<const Geometry::Shapes::Linesect3* const>(inscribed);

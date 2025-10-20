@@ -2,6 +2,8 @@
 #include <gtest/gtest.h>
 
 #include "Geometry/common/geometry_obj.hpp"
+#include "Geometry/math/point3.hpp"
+#include "Geometry/math/vector3.hpp"
 #include "Geometry/math_engine/collision_handler.hpp"
 #include "Geometry/shapes/shapes.hpp"
 #include "RLogSU/error_handler.hpp"
@@ -1129,4 +1131,22 @@ TEST(TrianglesTest_degenerate, 5h)
     auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
 
     EXPECT_EQ(collision_code, Geometry::MathEngine::NOTHING);
+}
+
+
+TEST(TrianglesTest_wtf, 0)
+{
+    Geometry::GeomObjUniqPtr tr1 =  
+        Geometry::Shapes::Triangle3::BuildGeomObj({0, 0, 0}, 
+                                                  {1, 0, 0}, 
+                                                  {0, 1, 0});
+    Geometry::GeomObjUniqPtr tr2 =  
+        Geometry::Shapes::Triangle3::BuildGeomObj({0.25, 0.5,  -1}, 
+                                                  {0.75, 0.25, -1}, 
+                                                  {0.75, 0.25, 0});
+
+    auto interactor = ERROR_HANDLE(Geometry::MathEngine::Interact(*tr1, *tr2));
+    auto collision_code          = ERROR_HANDLE(interactor->CollisionCode());
+
+    EXPECT_EQ(collision_code, Geometry::MathEngine::CROSS);
 }

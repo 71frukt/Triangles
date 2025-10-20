@@ -4,7 +4,7 @@
 
 namespace Geometry::Math {
     
-constexpr double CmpEps = 1e-8;
+constexpr double CmpEps = 1e-10;
 
 [[nodiscard]] inline bool DoubleEq(double a, double b, double eps = CmpEps)
 {
@@ -14,6 +14,11 @@ constexpr double CmpEps = 1e-8;
 [[nodiscard]] inline bool DoubleGE(double a, double b, double eps = CmpEps)
 {
     return a - b >= -eps;
+}
+
+[[nodiscard]] inline bool DoubleBE(double a, double b, double eps = CmpEps)
+{
+    return a - b <= eps;
 }
 
 [[nodiscard]] inline bool DoubleG(double a, double b, double eps = CmpEps)

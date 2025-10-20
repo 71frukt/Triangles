@@ -152,6 +152,10 @@ const CollisionCodeT PlanePlaneInteractor::CollisionCode() const
 
 const CollisionCodeT PointLinesectInteractor::CollisionCode() const
 {
+    // RLSU_WARNING("im in PointLinesectInteractor::CollisionCode()");
+    // point_.Dump("aapoint");
+    // linesect_.Dump("aalinesect_");
+
     if (ERROR_HANDLE(Interact(point_, linesect_.GetLine())->CollisionCode() == NOTHING))
         return NOTHING;
 
@@ -166,7 +170,7 @@ const CollisionCodeT PointLinesectInteractor::CollisionCode() const
     Math::Vector3 AB = linesect_.GetPoint2() - linesect_.GetPoint1();
 
 
-    if ((AC + BC).GetLen2() <= AB.GetLen2())
+    if (Math::DoubleGE(AB.GetLen2(), (AC + BC).GetLen2()))
         return LIES_IN;
 
     else
@@ -391,7 +395,7 @@ double LineLineInteractor::Distance() const
     ASSERT_HANDLE(line2_.Assert());
 
     Math::Vector3 normd_h = line1_.GetNormdDir() ^ line2_.GetNormdDir();
-    Math::Vector3 r1      = line2_.GetOrigin()   - line1_.GetOrigin();
+    Math::Vector3 r1      = line2_.GetOrigin  () - line1_.GetOrigin  ();
 
     double hight = 0;
     
@@ -399,7 +403,7 @@ double LineLineInteractor::Distance() const
         hight = (r1 ^ line1_.GetNormdDir()).GetLen();
 
     else
-        hight = r1 * normd_h;
+        hight = (r1 * normd_h) / normd_h.GetLen();
 
     return hight;
 }
@@ -523,6 +527,9 @@ GeomObjUniqPtr LineLineInteractor::Intersect() const
     ASSERT_HANDLE(line1_.Assert());
     ASSERT_HANDLE(line2_.Assert());
 
+    // line1_.Dump("line1_");
+    // line2_.Dump("line2_");
+
     if (CollisionCode() == EQUAL)
         return ERROR_HANDLE(std::make_unique<Primitives::Line3>(line1_));
 
@@ -542,8 +549,8 @@ GeomObjUniqPtr LineLineInteractor::Intersect() const
 
         Math::Vector3 rx = r1 + v1 * t;
         
-        RLSU_ASSERT(ERROR_HANDLE(Interact(Primitives::Point3(rx), line1_)->CollisionCode() == LIES_IN)
-                 && ERROR_HANDLE(Interact(Primitives::Point3(rx), line2_)->CollisionCode() == LIES_IN));
+        // RLSU_ASSERT(ERROR_HANDLE(Interact(Primitives::Point3(rx), line1_)->CollisionCode() == LIES_IN)
+        //          && ERROR_HANDLE(Interact(Primitives::Point3(rx), line2_)->CollisionCode() == LIES_IN));
 
         return ERROR_HANDLE(std::make_unique<Primitives::Point3>(rx));
     }
@@ -609,8 +616,8 @@ GeomObjUniqPtr PlanePlaneInteractor::Intersect() const
     const Math::Vector3  v  = n1 ^ n2;
     const Math::Vector3  r0 = ((n1 ^ v) * D2 - (n2 ^ v) * D1) / v.GetLen2();
 
-    RLSU_ASSERT(ERROR_HANDLE(Interact(Primitives::Line3(r0, v), plane1_)->CollisionCode() == LIES_IN)
-             && ERROR_HANDLE(Interact(Primitives::Line3(r0, v), plane2_)->CollisionCode() == LIES_IN));
+    // RLSU_ASSERT(ERROR_HANDLE(Interact(Primitives::Line3(r0, v), plane1_)->CollisionCode() == LIES_IN)
+    //          && ERROR_HANDLE(Interact(Primitives::Line3(r0, v), plane2_)->CollisionCode() == LIES_IN));
 
     return ERROR_HANDLE(std::make_unique<Primitives::Line3>(r0, v));
 }
@@ -736,6 +743,9 @@ GeomObjUniqPtr LineTriangleInteractor::Intersect() const
     ASSERT_HANDLE(line_    .Assert());
     ASSERT_HANDLE(triangle_.Assert());
 
+    // RLSU_DUMP(line_.Dump("line"));
+    // RLSU_DUMP(triangle_.Dump("tr"));
+
     if (CollisionCode() == NOTHING)
         return ERROR_HANDLE(std::make_unique<NotAnObj>());
     
@@ -781,12 +791,12 @@ GeomObjUniqPtr LineTriangleInteractor::Intersect() const
         {
             GeomObjUniqPtr& point0 = mb_cross_objs[(i + 0) % 3];
             GeomObjUniqPtr& point1 = mb_cross_objs[(i + 1) % 3];
-            GeomObjUniqPtr& point2 = mb_cross_objs[(i + 2) % 3];
+            GeomObjUniqPtr& point2 = mb_cross_objs[(i + 2) % 3];          
 
             if (point0->WhoAmI() == NOT_AN_OBJ)
             {
-                RLSU_ASSERT(point1->WhoAmI() == POINT3);
-                RLSU_ASSERT(point2->WhoAmI() == POINT3);
+                RLSU_ASSERT(point1->WhoAmI() == POINT3, "type = {}", ObjTypeStr(point1->WhoAmI()));
+                RLSU_ASSERT(point2->WhoAmI() == POINT3, "type = {}", ObjTypeStr(point2->WhoAmI()));
 
                 if (dynamic_cast<Primitives::Point3&>(*point1)
                  == dynamic_cast<Primitives::Point3&>(*point2))

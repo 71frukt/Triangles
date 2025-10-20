@@ -4,6 +4,7 @@
 
 #include "Geometry/math/double_handle.hpp"
 #include "Geometry/math/math.hpp"
+#include "Geometry/math/point3.hpp"
 #include "RLogSU/error_handler.hpp"
 
 namespace Geometry::Primitives {
@@ -21,8 +22,9 @@ class Point3 : public Geometry::Math::Point3
              , public Primitive
 {
 public:
-    Point3(double x, double y, double z)   : Geometry::Math::Point3(x, y, z)                    {}
-    Point3(const Math::Vector3& rad_vec)   : Geometry::Math::Point3(rad_vec)                    {}
+    Point3(double x, double y, double z)   : Geometry::Math::Point3(x, y, z) {}
+    Point3(const Math::Vector3& rad_vec)   : Geometry::Math::Point3(rad_vec) {}
+    Point3(const Math::Point3 & point  )   : Geometry::Math::Point3(point)   {}
     Point3(const GeomObjUniqPtr& geom_obj) : Geometry::Math::Point3(CastFromGeomObj_(geom_obj)) {}
     Point3() = default;
 
@@ -97,6 +99,7 @@ public:
     [[nodiscard]] double GetC() const { return normd_normality_.GetZ(); };
     [[nodiscard]] double GetD() const { return positive_D_;             };
     
+    [[nodiscard]] Primitives::Point3 GetOrigin() const { return {0, 0, -GetD() / GetC()};}
 
     void Assert() const override
     {

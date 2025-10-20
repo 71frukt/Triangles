@@ -9,7 +9,7 @@ namespace Geometry::Primitives {
 
 void Point3::DumpDetails() const
 {
-    RLSU_LOG("({:.2f}, {:.2f}, {:.2f})\n", GetX(), GetY(), GetZ());
+    RLSU_LOG("({:.5g}, {:.5g}, {:.5g})\n", GetX(), GetY(), GetZ());
 }
 
 void Line3::DumpDetails() const
@@ -20,7 +20,7 @@ void Line3::DumpDetails() const
 
 void Plane3::DumpDetails() const
 {
-    RLSU_LOG("{:+.2f}x {:+.2f}y {:+.2f}z {:+.2f} = 0\n", GetA(), GetB(), GetC(), GetD());
+    RLSU_LOG("{:+.5g}x {:+.5g}y {:+.5g}z {:+.5g} = 0\n", GetA(), GetB(), GetC(), GetD());
     normd_normality_.Dump("normd_normality");
 }
 

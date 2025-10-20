@@ -12,12 +12,19 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-option(DEBUG_MODE "Enable debug mode" ON)
+option(DEBUG_MODE "Enable debug mode" OFF)
 
 set(LOG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/log)
 
+#--- CREATE TESTS DIRECTORY --------------------------------------------
+set(TESTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/tests CACHE PATH "Directory for generated tests")
+file(MAKE_DIRECTORY ${TESTS_DIR})
+message(STATUS "Tests directory: ${TESTS_DIR}")
+#------------------------------------------------------------------------
+
 add_subdirectory(libs/RLogSU)
 add_subdirectory(source/Geometry)
+add_subdirectory(source/BvhTestGen)
 
 
 add_executable(gtest_triangles
@@ -78,11 +85,11 @@ if(DEBUG_MODE)
     message(STATUS "Sanitizers enabled for test targets")
 
 else()
-    target_compile_options(test_general
+    target_compile_options(test_general PRIVATE
         -O2
     )
 
-    target_compile_options(gtest_triangles
+    target_compile_options(gtest_triangles PRIVATE
         -O2
     )
 

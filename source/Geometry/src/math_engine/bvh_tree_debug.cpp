@@ -49,7 +49,7 @@ void BvhTree::AddNodeEdges_(RLSU::Graphics::Graph& graph, const AABBox* tree_nod
     {
         const AABContainer* container = static_cast<const AABContainer*>(tree_node);
         
-        for (const AABBox* child_node_ptr : container->GetChildren())
+        for (const AABBox* child_node_ptr : container->children)
         {
             RLSU_ASSERT(child_node_ptr);
 
@@ -62,22 +62,12 @@ void BvhTree::AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox
 {
     RLSU::Graphics::Graph::Node new_graph_node(tree_node);
 
-    int node_id = 0;
-
-    for (const AABBox* node : nodes_)
-    {
-        if (node == tree_node)
-            break;
-
-        node_id++;
-    }
-
     new_graph_node.SetLabel("{}\n"
-                            "x: [{:.2f}, {:.2f}]\n"
-                            "y: [{:.2f}, {:.2f}]\n"
-                            "z: [{:.2f}, {:.2f}]\n",
+                            "x: [{:.5g}, {:.5g}]\n"
+                            "y: [{:.5g}, {:.5g}]\n"
+                            "z: [{:.5g}, {:.5g}]\n",
         
-                            node_id,
+                            tree_node->GetId(),
                             tree_node->GetP0().GetX(), tree_node->GetP1().GetX(),
                             tree_node->GetP0().GetY(), tree_node->GetP1().GetY(),
                             tree_node->GetP0().GetZ(), tree_node->GetP1().GetZ()
@@ -100,6 +90,11 @@ void BvhTree::AddConfiduredGraphNode_(RLSU::Graphics::Graph& graph, const AABBox
         RLSU_ERROR("invalid node type");
         new_graph_node.SetShape(RLSU::Graphics::Shapes::DIAMOND);
         new_graph_node.SetColor(RLSU::Graphics::Colors::RED);
+    }
+
+    if (tree_node == root_)
+    {
+        new_graph_node.SetColor(RLSU::Graphics::Colors::AQUA);
     }
 
     graph.AddNode(new_graph_node);

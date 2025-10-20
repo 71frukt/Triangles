@@ -15,7 +15,7 @@ cmake --build build
 ```bash
 ❯ build/gtest_triangles
 ```
-Визуализация тестов в Geogebra представлена в `tests_vis.md`, а сами тесты в `source/test_general.cpp`.
+Визуализация тестов в Geogebra представлена в `collision_tests_vis.md`, а сами тесты в `source/test_general.cpp`.
 
 ### Общий тест
 ```bash

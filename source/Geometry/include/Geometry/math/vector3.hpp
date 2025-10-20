@@ -41,6 +41,7 @@ public:
     [[nodiscard]] Vector3  operator*  (const double   scalar) const;
     [[nodiscard]] Vector3  operator/  (const double   scalar) const;
     [[nodiscard]] double   operator*  (const Vector3& other ) const;     // скалярное
+
     [[nodiscard]] Vector3  operator^  (const Vector3& other ) const;     // векторное
  
                   Vector3& operator+= (const Vector3& other ) { return *this = (*this + other ); }
@@ -72,6 +73,8 @@ private:
     double y_ = 0;
     double z_ = 0;
 };
+
+[[nodiscard]] Vector3 operator*(double scalar, const Vector3& vec);
 
 
 }

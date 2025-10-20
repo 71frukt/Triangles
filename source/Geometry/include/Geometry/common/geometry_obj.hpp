@@ -1,9 +1,7 @@
 #pragma once
-#include "RLogSU/error_handler.hpp"
 #include "RLogSU/logger.hpp"
 #include <cstddef>
 #include <memory>
-#include <typeinfo>
 
 namespace Geometry {
 
